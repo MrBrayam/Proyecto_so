@@ -21,6 +21,8 @@ public class Cliente {
     @Column(unique = true, nullable = false)
     private String email;
     
+    private String password;
+    
     private String telefono;
     
     private String direccion;

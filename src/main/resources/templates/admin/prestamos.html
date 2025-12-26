@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Préstamos</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2>Gestión de Préstamos Activos</h2>
+        
+        <div th:if="${prestamos.isEmpty()}" class="empty-message">
+            <p>No hay préstamos activos en este momento.</p>
+        </div>
+        
+        <table class="admin-table" th:if="${!prestamos.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Email</th>
+                    <th>Libro</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="prestamo : ${prestamos}">
+                    <td th:text="${prestamo.id}">1</td>
+                    <td th:text="${prestamo.cliente.nombre + ' ' + prestamo.cliente.apellido}">Cliente</td>
+                    <td th:text="${prestamo.cliente.email}">Email</td>
+                    <td th:text="${prestamo.libro.titulo}">Libro</td>
+                    <td th:text="${#temporals.format(prestamo.fechaPedido, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                    <td th:text="'$' + ${prestamo.precio}">Precio</td>
+                    <td>
+                        <form th:action="@{/admin/prestamos/devolver/{id}(id=${prestamo.id})}" method="post" style="display: inline;">
+                            <button type="submit" class="btn-small btn-success" onclick="return confirm('¿Confirmar devolución del libro?')">Marcar como Devuelto</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

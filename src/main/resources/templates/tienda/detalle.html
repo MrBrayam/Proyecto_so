@@ -13,6 +13,16 @@
             <ul>
                 <li><a th:href="@{/tienda}">Tienda</a></li>
                 <li><a th:href="@{/admin}">Administración</a></li>
+                <li th:if="${session.clienteLogueado == null}">
+                    <a th:href="@{/cliente/login}" class="btn-login">Iniciar Sesión</a>
+                </li>
+                <li th:if="${session.clienteLogueado != null}" class="user-menu">
+                    <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
+                    <div class="dropdown">
+                        <a th:href="@{/cliente/mis-pedidos}">Mis Pedidos</a>
+                        <a th:href="@{/cliente/logout}">Cerrar Sesión</a>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
@@ -29,6 +39,26 @@
                 <p><strong>Precio:</strong> <span class="precio" th:text="'$' + ${libro.precio}">Precio</span></p>
                 <p><strong>Stock:</strong> <span th:text="${libro.stock}">Stock</span></p>
                 <p class="descripcion" th:text="${libro.descripcion}">Descripción del libro</p>
+                
+                <div th:if="${libro.stock > 0 && session.clienteLogueado != null}" class="acciones-libro">
+                    <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post" style="display: inline;">
+                        <input type="hidden" name="tipo" value="COMPRA">
+                        <button type="submit" class="btn btn-comprar">Comprar</button>
+                    </form>
+                    <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post" style="display: inline;">
+                        <input type="hidden" name="tipo" value="PRESTAMO">
+                        <button type="submit" class="btn btn-prestar">Solicitar Préstamo</button>
+                    </form>
+                </div>
+                
+                <div th:if="${libro.stock > 0 && session.clienteLogueado == null}" class="acciones-libro">
+                    <a th:href="@{/cliente/login}" class="btn btn-comprar">Inicia sesión para comprar o solicitar préstamo</a>
+                </div>
+                
+                <div th:if="${libro.stock == 0}" class="sin-stock-msg">
+                    <p>Lo sentimos, este libro no está disponible en este momento.</p>
+                </div>
+                
                 <a th:href="@{/tienda}" class="btn">Volver al catálogo</a>
             </div>
         </div>

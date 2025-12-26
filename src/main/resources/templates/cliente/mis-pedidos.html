@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>📚 Librería Online</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Tienda</a></li>
+                <li><a th:href="@{/admin}">Administración</a></li>
+                <li th:if="${session.clienteLogueado != null}" class="user-menu">
+                    <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
+                    <div class="dropdown">
+                        <a th:href="@{/cliente/mis-pedidos}">Mis Pedidos</a>
+                        <a th:href="@{/cliente/logout}">Cerrar Sesión</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Mis Pedidos</h2>
+        
+        <div th:if="${pedidos.isEmpty()}" class="empty-message">
+            <p>No tienes pedidos registrados.</p>
+            <a th:href="@{/tienda}" class="btn">Ir a la tienda</a>
+        </div>
+        
+        <table class="pedidos-table" th:if="${!pedidos.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Devolución</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="${pedido.libro.titulo}">Título</td>
+                    <td>
+                        <span class="badge" th:classappend="${pedido.tipo == 'PRESTAMO' ? 'badge-prestamo' : 'badge-compra'}" 
+                              th:text="${pedido.tipo}">Tipo</span>
+                    </td>
+                    <td th:text="${#temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                    <td th:text="'$' + ${pedido.precio}">Precio</td>
+                    <td>
+                        <span class="badge" 
+                              th:classappend="${pedido.estado == 'ACTIVO' ? 'badge-activo' : pedido.estado == 'DEVUELTO' ? 'badge-devuelto' : 'badge-completado'}" 
+                              th:text="${pedido.estado}">Estado</span>
+                    </td>
+                    <td>
+                        <span th:if="${pedido.fechaDevolucion != null}" 
+                              th:text="${#temporals.format(pedido.fechaDevolucion, 'dd/MM/yyyy')}">-</span>
+                        <span th:if="${pedido.fechaDevolucion == null}">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Librería Online - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

@@ -3,9 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.entity.Libro;
 import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Usuario;
+import com.example.demo.entity.Pedido;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
@@ -31,6 +34,9 @@ public class AdminController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     @GetMapping
     public String dashboard(Model model) {
@@ -163,5 +169,29 @@ public class AdminController {
     public String eliminarUsuario(@PathVariable Long id) {
         usuarioRepository.deleteById(id);
         return "redirect:/admin/usuarios";
+    }
+
+    // Préstamos
+    @GetMapping("/prestamos")
+    public String listarPrestamos(Model model) {
+        model.addAttribute("prestamos", pedidoRepository.findByTipoAndEstado("PRESTAMO", "ACTIVO"));
+        return "admin/prestamos";
+    }
+
+    @PostMapping("/prestamos/devolver/{id}")
+    public String devolverLibro(@PathVariable Long id) {
+        Pedido pedido = pedidoRepository.findById(id).orElse(null);
+        if (pedido != null && pedido.getTipo().equals("PRESTAMO") && pedido.getEstado().equals("ACTIVO")) {
+            pedido.setEstado("DEVUELTO");
+            pedido.setFechaDevolucion(LocalDateTime.now());
+            
+            // Incrementar stock
+            Libro libro = pedido.getLibro();
+            libro.setStock(libro.getStock() + 1);
+            libroRepository.save(libro);
+            
+            pedidoRepository.save(pedido);
+        }
+        return "redirect:/admin/prestamos";
     }
 }
