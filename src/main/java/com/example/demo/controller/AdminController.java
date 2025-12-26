@@ -10,6 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -46,7 +54,36 @@ public class AdminController {
     }
 
     @PostMapping("/libros/guardar")
-    public String guardarLibro(@ModelAttribute Libro libro) {
+    public String guardarLibro(@ModelAttribute Libro libro, @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
+        // Si se subió una imagen, guardarla localmente
+        if (imagen != null && !imagen.isEmpty()) {
+            try {
+                // Crear directorio si no existe
+                String uploadDir = "src/main/resources/static/uploads/";
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                
+                // Generar nombre único para la imagen
+                String fileName = UUID.randomUUID().toString() + "_" + imagen.getOriginalFilename();
+                Path filePath = uploadPath.resolve(fileName);
+                
+                // Guardar archivo
+                Files.copy(imagen.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                
+                // Establecer la URL de la imagen
+                libro.setUrlImg("/uploads/" + fileName);
+                
+                System.out.println("Imagen guardada: /uploads/" + fileName);
+            } catch (IOException e) {
+                System.err.println("Error al guardar imagen: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No se seleccionó imagen o urlImg ya tiene valor: " + libro.getUrlImg());
+        }
+        
         libroRepository.save(libro);
         return "redirect:/admin/libros";
     }

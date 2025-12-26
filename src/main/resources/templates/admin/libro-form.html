@@ -9,7 +9,7 @@
 <body>
     <header>
         <nav>
-            <h1>🔧 Panel de Administración</h1>
+            <h1>Panel de Administración</h1>
             <ul>
                 <li><a th:href="@{/tienda}">Ver Tienda</a></li>
                 <li><a th:href="@{/admin}">Dashboard</a></li>
@@ -20,7 +20,7 @@
     <main class="admin-container">
         <h2 th:text="${libro.id != null ? 'Editar Libro' : 'Nuevo Libro'}">Formulario de Libro</h2>
         
-        <form th:action="@{/admin/libros/guardar}" th:object="${libro}" method="post" class="admin-form">
+        <form th:action="@{/admin/libros/guardar}" th:object="${libro}" method="post" enctype="multipart/form-data" class="admin-form">
             <input type="hidden" th:field="*{id}">
             
             <div class="form-group">
@@ -54,8 +54,15 @@
             </div>
             
             <div class="form-group">
-                <label for="urlImg">URL de Imagen:</label>
+                <label for="imagen">Imagen del Libro:</label>
+                <input type="file" name="imagen" id="imagen" accept="image/*">
+                <small>Selecciona una imagen desde tu computadora</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="urlImg">O ingresa URL de Imagen:</label>
                 <input type="text" th:field="*{urlImg}" id="urlImg">
+                <small>Deja vacío si seleccionaste una imagen local</small>
             </div>
             
             <div class="form-actions">
