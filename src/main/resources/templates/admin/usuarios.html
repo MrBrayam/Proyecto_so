@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2>Gestión de Usuarios del Sistema</h2>
+        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-primary">Nuevo Usuario</a>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.id}">1</td>
+                    <td th:text="${usuario.username}">Username</td>
+                    <td th:text="${usuario.email}">Email</td>
+                    <td th:text="${usuario.rol}">Rol</td>
+                    <td>
+                        <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn-small">Editar</a>
+                        <a th:href="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" class="btn-small btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

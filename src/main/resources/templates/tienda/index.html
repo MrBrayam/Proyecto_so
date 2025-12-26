@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Libros</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>📚 Librería Online</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Tienda</a></li>
+                <li><a th:href="@{/admin}">Administración</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Catálogo de Libros</h2>
+        
+        <div class="libros-grid">
+            <div class="libro-card" th:each="libro : ${libros}">
+                <img th:src="${libro.urlImg}" th:alt="${libro.titulo}" class="libro-imagen">
+                <div class="libro-info">
+                    <h3 th:text="${libro.titulo}">Título del libro</h3>
+                    <p class="autor" th:text="${libro.autor}">Autor</p>
+                    <p class="precio" th:text="'$' + ${libro.precio}">Precio</p>
+                    <p class="stock" th:if="${libro.stock > 0}" th:text="'Stock: ' + ${libro.stock}">Stock</p>
+                    <p class="sin-stock" th:if="${libro.stock == 0}">Sin stock</p>
+                    <a th:href="@{/tienda/libro/{id}(id=${libro.id})}" class="btn">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Librería Online - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

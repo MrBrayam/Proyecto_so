@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Cliente</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2 th:text="${cliente.id != null ? 'Editar Cliente' : 'Nuevo Cliente'}">Formulario de Cliente</h2>
+        
+        <form th:action="@{/admin/clientes/guardar}" th:object="${cliente}" method="post" class="admin-form">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" th:field="*{nombre}" id="nombre" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" th:field="*{apellido}" id="apellido" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="text" th:field="*{telefono}" id="telefono">
+            </div>
+            
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <textarea th:field="*{direccion}" id="direccion" rows="3"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/admin/clientes}" class="btn">Cancelar</a>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

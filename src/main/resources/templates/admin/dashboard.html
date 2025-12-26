@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2>Dashboard</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Libros</h3>
+                <p class="stat-number" th:text="${totalLibros}">0</p>
+                <a th:href="@{/admin/libros}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card">
+                <h3>Clientes</h3>
+                <p class="stat-number" th:text="${totalClientes}">0</p>
+                <a th:href="@{/admin/clientes}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card">
+                <h3>Usuarios</h3>
+                <p class="stat-number" th:text="${totalUsuarios}">0</p>
+                <a th:href="@{/admin/usuarios}" class="btn">Gestionar</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

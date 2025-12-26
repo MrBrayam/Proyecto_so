@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Usuario</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2 th:text="${usuario.id != null ? 'Editar Usuario' : 'Nuevo Usuario'}">Formulario de Usuario</h2>
+        
+        <form th:action="@{/admin/usuarios/guardar}" th:object="${usuario}" method="post" class="admin-form">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" th:field="*{username}" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" th:field="*{password}" id="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <select th:field="*{rol}" id="rol" required>
+                    <option value="">Seleccione un rol</option>
+                    <option value="ADMIN">Administrador</option>
+                    <option value="USER">Usuario</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/admin/usuarios}" class="btn">Cancelar</a>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

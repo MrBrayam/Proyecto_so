@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${libro.titulo}">Detalle del Libro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>📚 Librería Online</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Tienda</a></li>
+                <li><a th:href="@{/admin}">Administración</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="libro-detalle" th:if="${libro != null}">
+            <div class="detalle-imagen">
+                <img th:src="${libro.urlImg}" th:alt="${libro.titulo}">
+            </div>
+            <div class="detalle-info">
+                <h2 th:text="${libro.titulo}">Título</h2>
+                <p><strong>Autor:</strong> <span th:text="${libro.autor}">Autor</span></p>
+                <p><strong>ISBN:</strong> <span th:text="${libro.isbn}">ISBN</span></p>
+                <p><strong>Precio:</strong> <span class="precio" th:text="'$' + ${libro.precio}">Precio</span></p>
+                <p><strong>Stock:</strong> <span th:text="${libro.stock}">Stock</span></p>
+                <p class="descripcion" th:text="${libro.descripcion}">Descripción del libro</p>
+                <a th:href="@{/tienda}" class="btn">Volver al catálogo</a>
+            </div>
+        </div>
+        <div th:if="${libro == null}">
+            <p>Libro no encontrado</p>
+            <a th:href="@{/tienda}" class="btn">Volver al catálogo</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Librería Online - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

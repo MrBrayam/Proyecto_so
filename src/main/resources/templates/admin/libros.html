@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Libros</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2>Gestión de Libros</h2>
+        <a th:href="@{/admin/libros/nuevo}" class="btn btn-primary">Nuevo Libro</a>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>ISBN</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="libro : ${libros}">
+                    <td th:text="${libro.id}">1</td>
+                    <td th:text="${libro.titulo}">Título</td>
+                    <td th:text="${libro.autor}">Autor</td>
+                    <td th:text="${libro.isbn}">ISBN</td>
+                    <td th:text="'$' + ${libro.precio}">Precio</td>
+                    <td th:text="${libro.stock}">Stock</td>
+                    <td>
+                        <a th:href="@{/admin/libros/editar/{id}(id=${libro.id})}" class="btn-small">Editar</a>
+                        <a th:href="@{/admin/libros/eliminar/{id}(id=${libro.id})}" class="btn-small btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>

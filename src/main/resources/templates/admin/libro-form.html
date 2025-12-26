@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Libro</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>🔧 Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2 th:text="${libro.id != null ? 'Editar Libro' : 'Nuevo Libro'}">Formulario de Libro</h2>
+        
+        <form th:action="@{/admin/libros/guardar}" th:object="${libro}" method="post" class="admin-form">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="form-group">
+                <label for="titulo">Título:</label>
+                <input type="text" th:field="*{titulo}" id="titulo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="autor">Autor:</label>
+                <input type="text" th:field="*{autor}" id="autor">
+            </div>
+            
+            <div class="form-group">
+                <label for="isbn">ISBN:</label>
+                <input type="text" th:field="*{isbn}" id="isbn">
+            </div>
+            
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <textarea th:field="*{descripcion}" id="descripcion" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="precio">Precio:</label>
+                <input type="number" th:field="*{precio}" id="precio" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock:</label>
+                <input type="number" th:field="*{stock}" id="stock">
+            </div>
+            
+            <div class="form-group">
+                <label for="urlImg">URL de Imagen:</label>
+                <input type="text" th:field="*{urlImg}" id="urlImg">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/admin/libros}" class="btn">Cancelar</a>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
+</body>
+</html>
