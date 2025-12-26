@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresos - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <h2>Panel Admin</h2>
+            <nav>
+                <a th:href="@{/admin}">Dashboard</a>
+                <a th:href="@{/admin/libros}">Libros</a>
+                <a th:href="@{/admin/clientes}">Clientes</a>
+                <a th:href="@{/admin/usuarios}">Usuarios</a>
+                <a th:href="@{/admin/prestamos}">Préstamos</a>
+                <a th:href="@{/admin/ingresos}" class="active">Ingresos</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="header">
+                <h1>Gestión de Ingresos</h1>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Total Ingresos</h3>
+                    <p class="stat-number" th:text="'$' + ${#numbers.formatDecimal(totalIngresos, 1, 2)}">$0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Ingresos por Compras</h3>
+                    <p class="stat-number" th:text="'$' + ${#numbers.formatDecimal(ingresosCompras, 1, 2)}">$0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Ingresos por Préstamos</h3>
+                    <p class="stat-number" th:text="'$' + ${#numbers.formatDecimal(ingresosPrestamos, 1, 2)}">$0.00</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Cliente</th>
+                            <th>Libro</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${ingresos.empty}">
+                            <td colspan="7" style="text-align: center;">No hay ingresos registrados</td>
+                        </tr>
+                        <tr th:each="ingreso : ${ingresos}">
+                            <td th:text="${ingreso.id}">1</td>
+                            <td th:text="${#temporals.format(ingreso.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                            <td>
+                                <span class="badge" 
+                                      th:classappend="${ingreso.tipo == 'PRESTAMO'} ? 'badge-prestamo' : 'badge-compra'"
+                                      th:text="${ingreso.tipo}">COMPRA</span>
+                            </td>
+                            <td th:text="${ingreso.descripcion}">Descripción</td>
+                            <td th:text="${ingreso.pedido.cliente.nombre}">Cliente</td>
+                            <td th:text="${ingreso.pedido.libro.titulo}">Libro</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(ingreso.monto, 1, 2)}">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

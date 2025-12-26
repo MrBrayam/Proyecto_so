@@ -28,7 +28,8 @@
                     <th>Título</th>
                     <th>Autor</th>
                     <th>ISBN</th>
-                    <th>Precio</th>
+                    <th>Precio Compra</th>
+                    <th>Precio Préstamo</th>
                     <th>Stock</th>
                     <th>Acciones</th>
                 </tr>
@@ -40,6 +41,7 @@
                     <td th:text="${libro.autor}">Autor</td>
                     <td th:text="${libro.isbn}">ISBN</td>
                     <td th:text="'$' + ${libro.precio}">Precio</td>
+                    <td th:text="'$' + ${libro.precioPrestamo}">Precio Préstamo</td>
                     <td th:text="${libro.stock}">Stock</td>
                     <td>
                         <a th:href="@{/admin/libros/editar/{id}(id=${libro.id})}" class="btn-small">Editar</a>

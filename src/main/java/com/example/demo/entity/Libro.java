@@ -24,6 +24,9 @@ public class Libro {
     
     private Double precio;
     
+    @Column(name = "precio_prestamo")
+    private Double precioPrestamo;
+    
     private Integer stock;
     
     @Column(name = "urlimg")

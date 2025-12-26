@@ -200,6 +200,25 @@ nav ul li a:hover {
     background-color: #c0392b;
 }
 
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.badge-prestamo {
+    background-color: #f39c12;
+    color: white;
+}
+
+.badge-compra {
+    background-color: #27ae60;
+    color: white;
+}
+
 /* Footer */
 footer {
     background-color: #34495e;

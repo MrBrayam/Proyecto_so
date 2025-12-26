@@ -4,10 +4,12 @@ import com.example.demo.entity.Libro;
 import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Usuario;
 import com.example.demo.entity.Pedido;
+import com.example.demo.entity.Ingreso;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.repository.PedidoRepository;
+import com.example.demo.repository.IngresoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private IngresoRepository ingresoRepository;
 
     @GetMapping
     public String dashboard(Model model) {
@@ -193,5 +198,21 @@ public class AdminController {
             pedidoRepository.save(pedido);
         }
         return "redirect:/admin/prestamos";
+    }
+
+    // Ingresos
+    @GetMapping("/ingresos")
+    public String listarIngresos(Model model) {
+        model.addAttribute("ingresos", ingresoRepository.findAll());
+        
+        Double totalIngresos = ingresoRepository.calcularIngresoTotal();
+        Double ingresosCompras = ingresoRepository.calcularIngresoPorTipo("COMPRA");
+        Double ingresosPrestamos = ingresoRepository.calcularIngresoPorTipo("PRESTAMO");
+        
+        model.addAttribute("totalIngresos", totalIngresos != null ? totalIngresos : 0.0);
+        model.addAttribute("ingresosCompras", ingresosCompras != null ? ingresosCompras : 0.0);
+        model.addAttribute("ingresosPrestamos", ingresosPrestamos != null ? ingresosPrestamos : 0.0);
+        
+        return "admin/ingresos";
     }
 }
