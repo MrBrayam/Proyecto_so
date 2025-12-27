@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Clientes</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/clientes.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="admin-container">
-        <h2>Gestión de Clientes</h2>
-        <a th:href="@{/admin/clientes/nuevo}" class="btn btn-primary">Nuevo Cliente</a>
+        <div class="action-header">
+            <h2 class="page-title">Gestión de Clientes</h2>
+            <a th:href="@{/admin/clientes/nuevo}" class="btn btn-nuevo">+ Nuevo Cliente</a>
+        </div>
         
-        <table class="admin-table">
+        <div class="table-container">
+            <table class="admin-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -34,22 +38,33 @@
             </thead>
             <tbody>
                 <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.id}">1</td>
-                    <td th:text="${cliente.nombre}">Nombre</td>
-                    <td th:text="${cliente.apellido}">Apellido</td>
-                    <td th:text="${cliente.email}">Email</td>
-                    <td th:text="${cliente.telefono}">Teléfono</td>
-                    <td>
-                        <a th:href="@{/admin/clientes/editar/{id}(id=${cliente.id})}" class="btn-small">Editar</a>
-                        <a th:href="@{/admin/clientes/eliminar/{id}(id=${cliente.id})}" class="btn-small btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                    <td data-label="ID" th:text="${cliente.id}">1</td>
+                    <td data-label="Nombre">
+                        <div class="cliente-info">
+                            <span class="cliente-nombre" th:text="${cliente.nombre} + ' ' + ${cliente.apellido}">Nombre Apellido</span>
+                        </div>
+                    </td>
+                    <td data-label="Apellido" th:text="${cliente.apellido}">Apellido</td>
+                    <td data-label="Email">
+                        <a th:href="'mailto:' + ${cliente.email}" class="email-display" th:text="${cliente.email}">Email</a>
+                    </td>
+                    <td data-label="Teléfono">
+                        <span class="telefono-display" th:text="${cliente.telefono}">Teléfono</span>
+                    </td>
+                    <td data-label="Acciones">
+                        <div class="acciones">
+                            <a th:href="@{/admin/clientes/editar/{id}(id=${cliente.id})}" class="btn btn-small btn-primary">✏️ Editar</a>
+                            <a th:href="@{/admin/clientes/eliminar/{id}(id=${cliente.id})}" class="btn btn-small btn-danger" onclick="return confirm('¿Estás seguro de eliminar este cliente?')">🗑️ Eliminar</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

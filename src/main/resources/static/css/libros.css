@@ -1,0 +1,187 @@
+/* ============================================
+   LIBROS - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Header de acción */
+.action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.action-header .btn {
+    margin: 0;
+}
+
+/* Indicadores de stock */
+.stock-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.stock-alto {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.stock-medio {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.stock-bajo {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.stock-agotado {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 2px solid #e74c3c;
+    font-weight: 700;
+}
+
+/* Información del libro en tabla */
+.libro-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.libro-titulo {
+    font-weight: 600;
+    color: var(--admin-dark);
+    font-size: 1rem;
+}
+
+.libro-detalles {
+    font-size: 0.85rem;
+    color: var(--admin-gray);
+}
+
+/* Precios destacados */
+.precio-display {
+    font-weight: 700;
+    color: var(--admin-success);
+    font-size: 1.05rem;
+}
+
+.precio-prestamo {
+    color: var(--admin-warning);
+}
+
+/* Acciones de tabla */
+.admin-table .acciones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Botón de nuevo libro destacado */
+.btn-nuevo {
+    background: linear-gradient(135deg, var(--admin-success) 0%, var(--admin-success-dark) 100%);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-nuevo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+/* Estadísticas rápidas */
+.stats-rapidas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-rapida {
+    background: var(--admin-white);
+    padding: 20px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    text-align: center;
+    border-left: 4px solid var(--admin-primary);
+}
+
+.stat-rapida h4 {
+    color: var(--admin-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-rapida .numero {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--admin-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-table .acciones {
+        flex-direction: column;
+    }
+    
+    .admin-table .acciones .btn-small {
+        width: 100%;
+    }
+    
+    /* Convertir tabla en tarjetas */
+    .admin-table {
+        display: block;
+    }
+    
+    .admin-table thead {
+        display: none;
+    }
+    
+    .admin-table tbody {
+        display: block;
+    }
+    
+    .admin-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        background: white;
+        border: 1px solid var(--admin-gray-lighter);
+        border-radius: var(--admin-radius);
+        padding: 20px;
+        box-shadow: var(--admin-shadow);
+    }
+    
+    .admin-table tbody td {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+        text-align: left;
+    }
+    
+    .admin-table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 15px;
+    }
+    
+    .admin-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+}

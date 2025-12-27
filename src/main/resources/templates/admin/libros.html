@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Libros</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/libros.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="admin-container">
-        <h2>Gestión de Libros</h2>
-        <a th:href="@{/admin/libros/nuevo}" class="btn btn-primary">Nuevo Libro</a>
+        <div class="action-header">
+            <h2 class="page-title">Gestión de Libros</h2>
+            <a th:href="@{/admin/libros/nuevo}" class="btn btn-nuevo">+ Nuevo Libro</a>
+        </div>
         
-        <table class="admin-table">
+        <div class="table-container">
+            <table class="admin-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -36,24 +40,40 @@
             </thead>
             <tbody>
                 <tr th:each="libro : ${libros}">
-                    <td th:text="${libro.id}">1</td>
-                    <td th:text="${libro.titulo}">Título</td>
-                    <td th:text="${libro.autor}">Autor</td>
-                    <td th:text="${libro.isbn}">ISBN</td>
-                    <td th:text="'$' + ${libro.precio}">Precio</td>
-                    <td th:text="'$' + ${libro.precioPrestamo}">Precio Préstamo</td>
-                    <td th:text="${libro.stock}">Stock</td>
-                    <td>
-                        <a th:href="@{/admin/libros/editar/{id}(id=${libro.id})}" class="btn-small">Editar</a>
-                        <a th:href="@{/admin/libros/eliminar/{id}(id=${libro.id})}" class="btn-small btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                    <td data-label="ID" th:text="${libro.id}">1</td>
+                    <td data-label="Título">
+                        <div class="libro-info">
+                            <span class="libro-titulo" th:text="${libro.titulo}">Título</span>
+                            <span class="libro-detalles" th:text="'ISBN: ' + ${libro.isbn}">ISBN</span>
+                        </div>
+                    </td>
+                    <td data-label="Autor" th:text="${libro.autor}">Autor</td>
+                    <td data-label="ISBN" th:text="${libro.isbn}">ISBN</td>
+                    <td data-label="Precio Compra">
+                        <span class="precio-display" th:text="'$' + ${#numbers.formatDecimal(libro.precio, 1, 2)}">$0.00</span>
+                    </td>
+                    <td data-label="Precio Préstamo">
+                        <span class="precio-display precio-prestamo" th:text="'$' + ${#numbers.formatDecimal(libro.precioPrestamo, 1, 2)}">$0.00</span>
+                    </td>
+                    <td data-label="Stock">
+                        <span class="stock-indicator"
+                              th:classappend="${libro.stock == 0} ? 'stock-agotado' : (${libro.stock <= 3} ? 'stock-bajo' : (${libro.stock <= 10} ? 'stock-medio' : 'stock-alto'))"
+                              th:text="${libro.stock}">0</span>
+                    </td>
+                    <td data-label="Acciones">
+                        <div class="acciones">
+                            <a th:href="@{/admin/libros/editar/{id}(id=${libro.id})}" class="btn btn-small btn-primary">✏️ Editar</a>
+                            <a th:href="@{/admin/libros/eliminar/{id}(id=${libro.id})}" class="btn btn-small btn-danger" onclick="return confirm('¿Estás seguro de eliminar este libro?')">🗑️ Eliminar</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>
