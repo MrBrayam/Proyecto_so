@@ -66,6 +66,12 @@ public class AdminController {
     @Autowired
     private DetalleCompraRepository detalleCompraRepository;
 
+    // Método auxiliar para verificar si el usuario es ADMIN
+    private boolean esAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "ADMIN".equals(usuario.getRol());
+    }
+
     // Login de administrador
     @GetMapping("/login")
     public String mostrarLogin(HttpSession session) {
@@ -102,6 +108,7 @@ public class AdminController {
             return "redirect:/admin/login";
         }
         
+        model.addAttribute("usuario", usuario);
         model.addAttribute("totalLibros", libroRepository.count());
         model.addAttribute("totalClientes", clienteRepository.count());
         model.addAttribute("totalUsuarios", usuarioRepository.count());
@@ -110,19 +117,28 @@ public class AdminController {
 
     // Libros
     @GetMapping("/libros")
-    public String listarLibros(Model model) {
+    public String listarLibros(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("libros", libroRepository.findAll());
         return "admin/libros";
     }
 
     @GetMapping("/libros/nuevo")
-    public String nuevoLibro(Model model) {
+    public String nuevoLibro(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("libro", new Libro());
         return "admin/libro-form";
     }
 
     @PostMapping("/libros/guardar")
-    public String guardarLibro(@ModelAttribute Libro libro, @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
+    public String guardarLibro(@ModelAttribute Libro libro, @RequestParam(value = "imagen", required = false) MultipartFile imagen, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         // Si se subió una imagen, guardarla localmente
         if (imagen != null && !imagen.isEmpty()) {
             try {
@@ -157,91 +173,138 @@ public class AdminController {
     }
 
     @GetMapping("/libros/editar/{id}")
-    public String editarLibro(@PathVariable Long id, Model model) {
+    public String editarLibro(@PathVariable Long id, Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         Libro libro = libroRepository.findById(id).orElse(null);
         model.addAttribute("libro", libro);
         return "admin/libro-form";
     }
 
     @GetMapping("/libros/eliminar/{id}")
-    public String eliminarLibro(@PathVariable Long id) {
+    public String eliminarLibro(@PathVariable Long id, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         libroRepository.deleteById(id);
         return "redirect:/admin/libros";
     }
 
     // Clientes
     @GetMapping("/clientes")
-    public String listarClientes(Model model) {
+    public String listarClientes(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("clientes", clienteRepository.findAll());
         return "admin/clientes";
     }
 
     @GetMapping("/clientes/nuevo")
-    public String nuevoCliente(Model model) {
+    public String nuevoCliente(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("cliente", new Cliente());
         return "admin/cliente-form";
     }
 
     @PostMapping("/clientes/guardar")
-    public String guardarCliente(@ModelAttribute Cliente cliente) {
+    public String guardarCliente(@ModelAttribute Cliente cliente, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         clienteRepository.save(cliente);
         return "redirect:/admin/clientes";
     }
 
     @GetMapping("/clientes/editar/{id}")
-    public String editarCliente(@PathVariable Long id, Model model) {
+    public String editarCliente(@PathVariable Long id, Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         Cliente cliente = clienteRepository.findById(id).orElse(null);
         model.addAttribute("cliente", cliente);
         return "admin/cliente-form";
     }
 
     @GetMapping("/clientes/eliminar/{id}")
-    public String eliminarCliente(@PathVariable Long id) {
+    public String eliminarCliente(@PathVariable Long id, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         clienteRepository.deleteById(id);
         return "redirect:/admin/clientes";
     }
 
     // Usuarios
     @GetMapping("/usuarios")
-    public String listarUsuarios(Model model) {
+    public String listarUsuarios(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("usuarios", usuarioRepository.findAll());
         return "admin/usuarios";
     }
 
     @GetMapping("/usuarios/nuevo")
-    public String nuevoUsuario(Model model) {
+    public String nuevoUsuario(Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         model.addAttribute("usuario", new Usuario());
         return "admin/usuario-form";
     }
 
     @PostMapping("/usuarios/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         usuarioRepository.save(usuario);
         return "redirect:/admin/usuarios";
     }
 
     @GetMapping("/usuarios/editar/{id}")
-    public String editarUsuario(@PathVariable Long id, Model model) {
+    public String editarUsuario(@PathVariable Long id, Model model, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         model.addAttribute("usuario", usuario);
         return "admin/usuario-form";
     }
 
     @GetMapping("/usuarios/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable Long id) {
+    public String eliminarUsuario(@PathVariable Long id, HttpSession session) {
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
         usuarioRepository.deleteById(id);
         return "redirect:/admin/usuarios";
     }
 
-    // Préstamos
+    // Préstamos (Permitido para USER y ADMIN)
     @GetMapping("/prestamos")
-    public String listarPrestamos(Model model) {
+    public String listarPrestamos(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("usuario", usuario);
         model.addAttribute("prestamos", pedidoRepository.findByTipoAndEstado("PRESTAMO", "ACTIVO"));
         return "admin/prestamos";
     }
 
     @PostMapping("/prestamos/devolver/{id}")
-    public String devolverLibro(@PathVariable Long id) {
+    public String devolverLibro(@PathVariable Long id, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+        
         Pedido pedido = pedidoRepository.findById(id).orElse(null);
         if (pedido != null && pedido.getTipo().equals("PRESTAMO") && pedido.getEstado().equals("ACTIVO")) {
             pedido.setEstado("DEVUELTO");
@@ -257,15 +320,22 @@ public class AdminController {
         return "redirect:/admin/prestamos";
     }
 
-    // Finanzas
+    // Finanzas (Solo ADMIN)
     @GetMapping("/finanzas")
     public String verFinanzas(@RequestParam(required = false) String filtro,
                               @RequestParam(required = false) String fechaInicio,
                               @RequestParam(required = false) String fechaFin,
                               Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
             return "redirect:/admin/login";
         }
+        
+        if (!esAdmin(session)) {
+            return "redirect:/admin";
+        }
+        
+        model.addAttribute("usuario", usuario);
         
         LocalDateTime inicio = null;
         LocalDateTime fin = LocalDateTime.now();
@@ -346,7 +416,7 @@ public class AdminController {
         return "redirect:/admin/finanzas";
     }
 
-    // Pedidos Pendientes
+    // Pedidos Pendientes (Permitido para USER y ADMIN)
     @GetMapping("/pedidos-pendientes")
     public String listarPedidosPendientes(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
@@ -354,6 +424,7 @@ public class AdminController {
             return "redirect:/admin/login";
         }
         
+        model.addAttribute("usuario", usuario);
         model.addAttribute("pedidosPendientes", pedidoRepository.findByEstado("PENDIENTE"));
         return "admin/pedidos-pendientes";
     }

@@ -5,6 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <style>
+        .user-info {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .user-text h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .user-text p {
+            margin: 5px 0 0 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .role-admin {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .role-user {
+            background: #3498db;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,6 +78,24 @@
     </header>
 
     <main class="admin-container">
+        <!-- Información del Usuario -->
+        <div class="user-info">
+            <div class="user-details">
+                <div class="user-avatar" th:text="${#strings.substring(usuario.username, 0, 1).toUpperCase()}">A</div>
+                <div class="user-text">
+                    <h3 th:text="${usuario.username}">Usuario</h3>
+                    <p>
+                        <span th:text="${usuario.email}">email@example.com</span> - 
+                        <span class="role-badge" th:classappend="${usuario.rol == 'ADMIN'} ? 'role-admin' : 'role-user'"
+                              th:text="${usuario.rol}">ADMIN</span>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/admin/logout}" class="btn btn-delete" style="background: #e74c3c;">🚪 Cerrar Sesión</a>
+            </div>
+        </div>
+        
         <h2>Dashboard</h2>
         
         <div class="stats-grid">
@@ -26,37 +104,40 @@
                 <p class="stat-number">📦</p>
                 <a th:href="@{/admin/pedidos-pendientes}" class="btn">Gestionar</a>
             </div>
-            <div class="stat-card">
-                <h3>Libros</h3>
-                <p class="stat-number" th:text="${totalLibros}">0</p>
-                <a th:href="@{/admin/libros}" class="btn">Gestionar</a>
-            </div>
-            <div class="stat-card">
-                <h3>Clientes</h3>
-                <p class="stat-number" th:text="${totalClientes}">0</p>
-                <a th:href="@{/admin/clientes}" class="btn">Gestionar</a>
-            </div>
-            <div class="stat-card">
-                <h3>Usuarios</h3>
-                <p class="stat-number" th:text="${totalUsuarios}">0</p>
-                <a th:href="@{/admin/usuarios}" class="btn">Gestionar</a>
-            </div>
+            
             <div class="stat-card">
                 <h3>Préstamos</h3>
                 <p class="stat-number">📚</p>
                 <a th:href="@{/admin/prestamos}" class="btn">Gestionar</a>
             </div>
-            <div class="stat-card">
+            
+            <!-- Solo mostrar para ADMIN -->
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
+                <h3>Libros</h3>
+                <p class="stat-number" th:text="${totalLibros}">0</p>
+                <a th:href="@{/admin/libros}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
+                <h3>Clientes</h3>
+                <p class="stat-number" th:text="${totalClientes}">0</p>
+                <a th:href="@{/admin/clientes}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
+                <h3>Usuarios</h3>
+                <p class="stat-number" th:text="${totalUsuarios}">0</p>
+                <a th:href="@{/admin/usuarios}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Finanzas</h3>
                 <p class="stat-number">💰</p>
                 <a th:href="@{/admin/finanzas}" class="btn">Ver Reporte</a>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Proveedores</h3>
                 <p class="stat-number">🏢</p>
                 <a th:href="@{/admin/proveedores}" class="btn">Gestionar</a>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Compras</h3>
                 <p class="stat-number">🛒</p>
                 <a th:href="@{/admin/compras}" class="btn">Ver Compras</a>

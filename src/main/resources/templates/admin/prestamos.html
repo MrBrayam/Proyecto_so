@@ -13,12 +13,17 @@
             <ul>
                 <li><a th:href="@{/tienda}">Ver Tienda</a></li>
                 <li><a th:href="@{/admin}">Dashboard</a></li>
+                <li><a th:href="@{/admin/logout}" style="color: #e74c3c;">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="admin-container">
         <h2>Gestión de Préstamos Activos</h2>
+        <p style="color: #7f8c8d; margin-bottom: 20px;">
+            Usuario: <strong th:text="${usuario.username}">admin</strong> 
+            (<span th:text="${usuario.rol}">ADMIN</span>)
+        </p>
         
         <div th:if="${prestamos.isEmpty()}" class="empty-message">
             <p>No hay préstamos activos en este momento.</p>

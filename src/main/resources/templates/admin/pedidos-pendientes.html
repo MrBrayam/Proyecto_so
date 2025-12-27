@@ -7,24 +7,25 @@
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
+    <header>
+        <nav>
+            <h1>Panel de Administración</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}">Dashboard</a></li>
+                <li><a th:href="@{/admin/logout}" style="color: #e74c3c;">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+    
     <div class="admin-container">
-        <aside class="sidebar">
-            <h2>Panel Admin</h2>
-            <nav>
-                <a th:href="@{/admin}">Dashboard</a>
-                <a th:href="@{/admin/pedidos-pendientes}" class="active">Pedidos Pendientes</a>
-                <a th:href="@{/admin/libros}">Libros</a>
-                <a th:href="@{/admin/clientes}">Clientes</a>
-                <a th:href="@{/admin/usuarios}">Usuarios</a>
-                <a th:href="@{/admin/prestamos}">Préstamos</a>
-                <a th:href="@{/admin/ingresos}">Ingresos</a>
-                <a th:href="@{/admin/logout}">Cerrar Sesión</a>
-            </nav>
-        </aside>
-
         <main class="content">
             <div class="header">
                 <h1>Pedidos Pendientes de Confirmación</h1>
+                <p style="color: #7f8c8d;">
+                    Usuario: <strong th:text="${usuario.username}">admin</strong> 
+                    (<span th:text="${usuario.rol}">ADMIN</span>)
+                </p>
                 <p style="color: #7f8c8d;">Cliente debe acercarse al bibliotecario para confirmar la compra/préstamo</p>
             </div>
 
@@ -94,5 +95,9 @@
             </div>
         </main>
     </div>
+    
+    <footer>
+        <p>&copy; 2025 Panel de Administración</p>
+    </footer>
 </body>
 </html>
