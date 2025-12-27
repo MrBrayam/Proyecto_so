@@ -39,8 +39,6 @@ public class Factura {
         if (fechaEmision == null) {
             fechaEmision = LocalDateTime.now();
         }
-        if (numeroFactura == null) {
-            numeroFactura = "FAC-" + System.currentTimeMillis();
-        }
+        // El número de factura se genera en el controlador
     }
 }

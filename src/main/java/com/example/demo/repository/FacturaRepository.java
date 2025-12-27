@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface FacturaRepository extends JpaRepository<Factura, Long> {
     Optional<Factura> findByPedido(Pedido pedido);
     Optional<Factura> findByNumeroFactura(String numeroFactura);
+    
+    Optional<Factura> findFirstByOrderByIdDesc();
 }

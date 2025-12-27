@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -328,11 +329,15 @@ public class AdminController {
             ingreso.setFecha(LocalDateTime.now());
             ingresoRepository.save(ingreso);
 
+            // Generar número de factura correlativo
+            String numeroFactura = generarNumeroFactura();
+
             // Generar factura/boleta
             Factura factura = new Factura();
             factura.setPedido(pedido);
             factura.setUsuario(usuario);
             factura.setTipoDocumento(tipoDocumento);
+            factura.setNumeroFactura(numeroFactura);
             factura.setSubtotal(precio);
             factura.setImpuesto(precio * 0.19);
             factura.setTotal(precio + (precio * 0.19));
@@ -371,5 +376,28 @@ public class AdminController {
 
         model.addAttribute("factura", factura);
         return "admin/factura";
+    }
+    
+    private String generarNumeroFactura() {
+        Optional<Factura> ultimaFactura = facturaRepository.findFirstByOrderByIdDesc();
+        long numeroCorrelativo = 1;
+        
+        if (ultimaFactura.isPresent() && ultimaFactura.get().getNumeroFactura() != null) {
+            String ultimoNumero = ultimaFactura.get().getNumeroFactura();
+            // Extraer el número después de "FAC-" (asumiendo formato FAC-000000001)
+            try {
+                if (ultimoNumero.startsWith("FAC-")) {
+                    numeroCorrelativo = Long.parseLong(ultimoNumero.substring(4)) + 1;
+                } else {
+                    numeroCorrelativo = Long.parseLong(ultimoNumero) + 1;
+                }
+            } catch (NumberFormatException e) {
+                // Si hay error al parsear, empezar desde 1
+                numeroCorrelativo = 1;
+            }
+        }
+        
+        // Formatear con prefijo FAC- y 9 dígitos: FAC-000000001
+        return "FAC-" + String.format("%09d", numeroCorrelativo);
     }
 }
