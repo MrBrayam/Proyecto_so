@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Application Configuration ###
+application.properties
+application-*.properties
+application.yml
+application-*.yml
+
+### Database Scripts ###
+*.sql
+!schema.sql
+
+### Uploads ###
+src/main/resources/static/uploads/
+uploads/
+
+### Logs ###
+*.log
+logs/
+
+### Sensitive Data ###
+*.env
+.env.*
+secrets/
