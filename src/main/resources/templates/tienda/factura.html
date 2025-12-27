@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .factura-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .factura-header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .factura-header h1 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .factura-numero {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .factura-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .info-section h3 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section p {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .info-section strong {
+            color: #2c3e50;
+        }
+        
+        .factura-detalle {
+            margin: 30px 0;
+        }
+        
+        .factura-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .factura-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .factura-table th,
+        .factura-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .factura-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .factura-totales {
+            margin-top: 30px;
+            text-align: right;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .total-row.final {
+            border-top: 3px solid #2c3e50;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #27ae60;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        
+        .total-label {
+            margin-right: 20px;
+            color: #555;
+        }
+        
+        .total-value {
+            min-width: 150px;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .factura-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+        }
+        
+        .acciones-factura {
+            margin-top: 30px;
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn-imprimir {
+            background-color: #3498db;
+            padding: 12px 30px;
+        }
+        
+        .btn-imprimir:hover {
+            background-color: #2980b9;
+        }
+        
+        .tipo-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        @media print {
+            .acciones-factura {
+                display: none;
+            }
+            .factura-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+    <script>
+        // Abrir en nueva pestaña automáticamente
+        window.onload = function() {
+            // Si esta ventana no se abrió en una nueva pestaña, abrirla
+            if (window.name !== 'factura') {
+                window.open(window.location.href, 'factura', 'width=900,height=800');
+            }
+        };
+        
+        function imprimirFactura() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <div class="factura-container">
+        <div class="factura-header">
+            <h1 th:text="${factura.tipoDocumento == 'FACTURA'} ? '📄 FACTURA' : '🧾 BOLETA'">📄 FACTURA</h1>
+            <p class="factura-numero" th:text="'N° ' + ${factura.numeroFactura}">N° FAC-000001</p>
+            <p class="factura-numero" th:text="'Fecha: ' + ${#temporals.format(factura.fechaEmision, 'dd/MM/yyyy HH:mm')}">Fecha: 01/01/2024</p>
+        </div>
+        
+        <div class="factura-info">
+            <div class="info-section">
+                <h3>Datos del Cliente</h3>
+                <p><strong>Nombre:</strong> <span th:text="${factura.pedido.cliente.nombre}">Cliente</span></p>
+                <p><strong>Email:</strong> <span th:text="${factura.pedido.cliente.email}">email@example.com</span></p>
+                <p th:if="${factura.pedido.cliente.dni != null}"><strong>DNI:</strong> <span th:text="${factura.pedido.cliente.dni}">-</span></p>
+                <p th:if="${factura.tipoDocumento == 'FACTURA' && factura.pedido.cliente.ruc != null}">
+                    <strong>RUC:</strong> <span th:text="${factura.pedido.cliente.ruc}">-</span>
+                </p>
+                <p><strong>Teléfono:</strong> <span th:text="${factura.pedido.cliente.telefono}">-</span></p>
+            </div>
+            
+            <div class="info-section">
+                <h3>Datos de la Librería</h3>
+                <p><strong>Nombre:</strong> Librería Online</p>
+                <p><strong>RUC:</strong> 20123456789</p>
+                <p><strong>Dirección:</strong> Av. Principal 123</p>
+                <p><strong>Teléfono:</strong> (01) 234-5678</p>
+            </div>
+        </div>
+        
+        <div class="factura-detalle">
+            <h3>Detalle del Pedido</h3>
+            <table class="factura-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong th:text="${factura.pedido.libro.titulo}">Título del Libro</strong><br>
+                            <small th:text="'Autor: ' + ${factura.pedido.libro.autor}">Autor</small><br>
+                            <small th:text="'ISBN: ' + ${factura.pedido.libro.isbn}">ISBN</small>
+                        </td>
+                        <td>
+                            <span class="tipo-badge badge" 
+                                  th:classappend="${factura.pedido.tipo == 'PRESTAMO'} ? 'badge-prestamo' : 'badge-compra'"
+                                  th:text="${factura.pedido.tipo == 'PRESTAMO'} ? 'PRÉSTAMO' : 'COMPRA'">
+                                COMPRA
+                            </span>
+                        </td>
+                        <td>1</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(factura.pedido.precio, 1, 2)}">$0.00</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(factura.pedido.precio, 1, 2)}">$0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="factura-totales">
+            <div class="total-row">
+                <span class="total-label">Subtotal:</span>
+                <span class="total-value" th:text="'$' + ${#numbers.formatDecimal(factura.subtotal, 1, 2)}">$0.00</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">IVA (19%):</span>
+                <span class="total-value" th:text="'$' + ${#numbers.formatDecimal(factura.impuesto, 1, 2)}">$0.00</span>
+            </div>
+            <div class="total-row final">
+                <span class="total-label">TOTAL:</span>
+                <span class="total-value" th:text="'$' + ${#numbers.formatDecimal(factura.total, 1, 2)}">$0.00</span>
+            </div>
+        </div>
+        
+        <div class="factura-footer" th:if="${factura.pedido.tipo == 'PRESTAMO'}">
+            <p><strong>NOTA:</strong> Este es un préstamo. El libro debe ser devuelto.</p>
+            <p th:if="${factura.pedido.fechaDevolucion != null}">
+                Fecha de devolución: <span th:text="${#temporals.format(factura.pedido.fechaDevolucion, 'dd/MM/yyyy')}"></span>
+            </p>
+        </div>
+        
+        <div class="factura-footer">
+            <p>Gracias por su compra</p>
+            <p>Esta es una representación impresa de una factura electrónica</p>
+        </div>
+        
+        <div class="acciones-factura">
+            <button onclick="imprimirFactura()" class="btn btn-imprimir">🖨️ Imprimir Factura</button>
+            <a th:href="@{/cliente/mis-pedidos}" class="btn">Ver Mis Pedidos</a>
+            <a th:href="@{/tienda}" class="btn">Volver a la Tienda</a>
+        </div>
+    </div>
+</body>
+</html>

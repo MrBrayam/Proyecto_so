@@ -19,6 +19,7 @@
                 <li th:if="${session.clienteLogueado != null}" class="user-menu">
                     <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
                     <div class="dropdown">
+                        <a th:href="@{/cliente/perfil}">Mi Perfil</a>
                         <a th:href="@{/cliente/mis-pedidos}">Mis Pedidos</a>
                         <a th:href="@{/cliente/logout}">Cerrar Sesión</a>
                     </div>
@@ -42,14 +43,59 @@
                 <p class="descripcion" th:text="${libro.descripcion}">Descripción del libro</p>
                 
                 <div th:if="${libro.stock > 0 && session.clienteLogueado != null}" class="acciones-libro">
-                    <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post" style="display: inline;">
-                        <input type="hidden" name="tipo" value="COMPRA">
-                        <button type="submit" class="btn btn-comprar">Comprar</button>
-                    </form>
-                    <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post" style="display: inline;">
-                        <input type="hidden" name="tipo" value="PRESTAMO">
-                        <button type="submit" class="btn btn-prestar">Solicitar Préstamo</button>
-                    </form>
+                    <h3 style="margin-bottom: 15px;">Selecciona una opción:</h3>
+                    
+                    <!-- Comprar -->
+                    <div style="margin-bottom: 20px; padding: 15px; border: 2px solid #27ae60; border-radius: 8px;">
+                        <h4 style="color: #27ae60; margin-top: 0;">Comprar</h4>
+                        <p>Precio: <strong th:text="'$' + ${libro.precio}">$0.00</strong></p>
+                        
+                        <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post">
+                            <input type="hidden" name="tipo" value="COMPRA">
+                            
+                            <label style="display: block; margin: 10px 0;">
+                                <input type="radio" name="tipoDocumento" value="BOLETA" checked required>
+                                Boleta
+                            </label>
+                            
+                            <label style="display: block; margin: 10px 0;" th:if="${session.clienteLogueado.ruc != null && session.clienteLogueado.ruc != ''}">
+                                <input type="radio" name="tipoDocumento" value="FACTURA" required>
+                                Factura (requiere RUC)
+                            </label>
+                            
+                            <p th:if="${session.clienteLogueado.ruc == null || session.clienteLogueado.ruc == ''}" style="color: #e67e22; font-size: 0.9rem;">
+                                Para solicitar factura, agrega tu RUC en <a th:href="@{/cliente/perfil}">Mi Perfil</a>
+                            </p>
+                            
+                            <button type="submit" class="btn btn-comprar" style="margin-top: 10px;">Proceder con Compra</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Préstamo -->
+                    <div style="padding: 15px; border: 2px solid #f39c12; border-radius: 8px;">
+                        <h4 style="color: #f39c12; margin-top: 0;">Solicitar Préstamo</h4>
+                        <p>Precio: <strong th:text="'$' + ${libro.precioPrestamo}">$0.00</strong></p>
+                        
+                        <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post">
+                            <input type="hidden" name="tipo" value="PRESTAMO">
+                            
+                            <label style="display: block; margin: 10px 0;">
+                                <input type="radio" name="tipoDocumento" value="BOLETA" checked required>
+                                Boleta
+                            </label>
+                            
+                            <label style="display: block; margin: 10px 0;" th:if="${session.clienteLogueado.ruc != null && session.clienteLogueado.ruc != ''}">
+                                <input type="radio" name="tipoDocumento" value="FACTURA" required>
+                                Factura (requiere RUC)
+                            </label>
+                            
+                            <p th:if="${session.clienteLogueado.ruc == null || session.clienteLogueado.ruc == ''}" style="color: #e67e22; font-size: 0.9rem;">
+                                Para solicitar factura, agrega tu RUC en <a th:href="@{/cliente/perfil}">Mi Perfil</a>
+                            </p>
+                            
+                            <button type="submit" class="btn btn-prestar" style="margin-top: 10px;">Proceder con Préstamo</button>
+                        </form>
+                    </div>
                 </div>
                 
                 <div th:if="${libro.stock > 0 && session.clienteLogueado == null}" class="acciones-libro">

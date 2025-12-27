@@ -23,6 +23,11 @@ public class Cliente {
     
     private String password;
     
+    @Column(unique = true)
+    private String dni;
+    
+    private String ruc;
+    
     private String telefono;
     
     private String direccion;

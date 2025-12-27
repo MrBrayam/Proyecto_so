@@ -19,6 +19,7 @@
                 <li th:if="${session.clienteLogueado != null}" class="user-menu">
                     <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
                     <div class="dropdown">
+                        <a th:href="@{/cliente/perfil}">Mi Perfil</a>
                         <a th:href="@{/cliente/mis-pedidos}">Mis Pedidos</a>
                         <a th:href="@{/cliente/logout}">Cerrar Sesión</a>
                     </div>

@@ -4,9 +4,11 @@ import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Libro;
 import com.example.demo.entity.Pedido;
 import com.example.demo.entity.Ingreso;
+import com.example.demo.entity.Factura;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.PedidoRepository;
 import com.example.demo.repository.IngresoRepository;
+import com.example.demo.repository.FacturaRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,9 @@ public class TiendaController {
     @Autowired
     private IngresoRepository ingresoRepository;
 
+    @Autowired
+    private FacturaRepository facturaRepository;
+
     @GetMapping
     public String index(Model model) {
         model.addAttribute("libros", libroRepository.findAll());
@@ -43,10 +48,19 @@ public class TiendaController {
 
     @PostMapping("/libro/{id}/comprar")
     public String comprarLibro(@PathVariable Long id, @RequestParam String tipo, 
+                               @RequestParam String tipoDocumento,
                                HttpSession session, Model model) {
         Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
         if (cliente == null) {
             return "redirect:/cliente/login";
+        }
+
+        // Validar que si quiere factura, tenga RUC
+        if (tipoDocumento.equals("FACTURA") && (cliente.getRuc() == null || cliente.getRuc().isEmpty())) {
+            model.addAttribute("error", "Debes agregar tu RUC en tu perfil para solicitar una factura");
+            Libro libro = libroRepository.findById(id).orElse(null);
+            model.addAttribute("libro", libro);
+            return "tienda/detalle";
         }
 
         Libro libro = libroRepository.findById(id).orElse(null);
@@ -90,6 +104,37 @@ public class TiendaController {
         ingreso.setFecha(LocalDateTime.now());
         ingresoRepository.save(ingreso);
 
-        return "redirect:/cliente/mis-pedidos";
+        // Generar factura
+        Factura factura = new Factura();
+        factura.setPedido(pedidoGuardado);
+        factura.setTipoDocumento(tipoDocumento); // BOLETA o FACTURA
+        factura.setSubtotal(precio);
+        factura.setImpuesto(precio * 0.19); // 19% de IVA
+        factura.setTotal(precio + (precio * 0.19));
+        Factura facturaGuardada = facturaRepository.save(factura);
+
+        // Redirigir a la factura
+        return "redirect:/tienda/factura/" + facturaGuardada.getId();
+    }
+
+    @GetMapping("/factura/{id}")
+    public String verFactura(@PathVariable Long id, Model model, HttpSession session) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return "redirect:/cliente/login";
+        }
+
+        Factura factura = facturaRepository.findById(id).orElse(null);
+        if (factura == null) {
+            return "redirect:/cliente/mis-pedidos";
+        }
+
+        // Verificar que la factura pertenece al cliente logueado
+        if (!factura.getPedido().getCliente().getId().equals(cliente.getId())) {
+            return "redirect:/cliente/mis-pedidos";
+        }
+
+        model.addAttribute("factura", factura);
+        return "tienda/factura";
     }
 }

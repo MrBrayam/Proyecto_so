@@ -82,4 +82,51 @@ public class ClienteController {
         model.addAttribute("pedidos", pedidos);
         return "cliente/mis-pedidos";
     }
+
+    @GetMapping("/perfil")
+    public String verPerfil(HttpSession session, Model model) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return "redirect:/cliente/login";
+        }
+        
+        model.addAttribute("cliente", cliente);
+        return "cliente/perfil";
+    }
+
+    @PostMapping("/perfil/actualizar")
+    public String actualizarPerfil(@ModelAttribute Cliente clienteActualizado, 
+                                   HttpSession session, Model model) {
+        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
+        if (cliente == null) {
+            return "redirect:/cliente/login";
+        }
+
+        // Obtener cliente de la base de datos
+        Cliente clienteDb = clienteRepository.findById(cliente.getId()).orElse(null);
+        if (clienteDb == null) {
+            return "redirect:/cliente/login";
+        }
+
+        // Actualizar solo los campos permitidos (NO el DNI)
+        clienteDb.setNombre(clienteActualizado.getNombre());
+        clienteDb.setApellido(clienteActualizado.getApellido());
+        clienteDb.setTelefono(clienteActualizado.getTelefono());
+        clienteDb.setDireccion(clienteActualizado.getDireccion());
+        clienteDb.setRuc(clienteActualizado.getRuc());
+        
+        // Si quiere cambiar contraseña
+        if (clienteActualizado.getPassword() != null && !clienteActualizado.getPassword().isEmpty()) {
+            clienteDb.setPassword(clienteActualizado.getPassword());
+        }
+
+        clienteRepository.save(clienteDb);
+        
+        // Actualizar sesión
+        session.setAttribute("clienteLogueado", clienteDb);
+        
+        model.addAttribute("cliente", clienteDb);
+        model.addAttribute("mensaje", "Perfil actualizado correctamente");
+        return "cliente/perfil";
+    }
 }

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .perfil-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .perfil-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 30px;
+        }
+        
+        .perfil-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .perfil-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .perfil-form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .perfil-form input:disabled {
+            background-color: #ecf0f1;
+            cursor: not-allowed;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #bee5eb;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .btn-guardar {
+            background-color: #27ae60;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-guardar:hover {
+            background-color: #229954;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>📚 Librería Online</h1>
+            <ul>
+                <li><a th:href="@{/tienda}">Tienda</a></li>
+                <li th:if="${session.clienteLogueado != null}" class="user-menu">
+                    <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
+                    <div class="dropdown">
+                        <a th:href="@{/cliente/perfil}">Mi Perfil</a>
+                        <a th:href="@{/cliente/mis-pedidos}">Mis Pedidos</a>
+                        <a th:href="@{/cliente/logout}">Cerrar Sesión</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="perfil-container">
+            <div class="perfil-header">
+                <h2>👤 Mi Perfil</h2>
+            </div>
+
+            <div th:if="${mensaje}" class="alert-success">
+                <p th:text="${mensaje}">Mensaje</p>
+            </div>
+
+            <div th:if="${cliente.ruc == null || cliente.ruc == ''}" class="alert-warning">
+                <strong>⚠️ Atención:</strong> Para poder solicitar facturas, debes agregar tu RUC.
+            </div>
+
+            <form th:action="@{/cliente/perfil/actualizar}" th:object="${cliente}" method="post" class="perfil-form">
+                
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" th:field="*{dni}" id="dni" disabled>
+                    <small style="color: #7f8c8d;">El DNI no se puede modificar</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre: *</label>
+                    <input type="text" th:field="*{nombre}" id="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido">Apellido: *</label>
+                    <input type="text" th:field="*{apellido}" id="apellido" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email: *</label>
+                    <input type="email" th:field="*{email}" id="email" disabled>
+                    <small style="color: #7f8c8d;">El email no se puede modificar</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" th:field="*{telefono}" id="telefono">
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" th:field="*{direccion}" id="direccion">
+                </div>
+
+                <div class="form-group">
+                    <label for="ruc">RUC:</label>
+                    <input type="text" th:field="*{ruc}" id="ruc" maxlength="11" pattern="[0-9]{11}" 
+                           placeholder="Ingresa 11 dígitos para poder solicitar facturas">
+                    <small style="color: #7f8c8d;">Necesario para solicitar facturas</small>
+                </div>
+
+                <div class="alert-info">
+                    <strong>💡 Cambiar contraseña:</strong> Déjalo en blanco si no deseas cambiarla
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Nueva Contraseña:</label>
+                    <input type="password" name="password" id="password" placeholder="Dejar vacío para mantener la actual">
+                </div>
+
+                <button type="submit" class="btn btn-guardar">💾 Guardar Cambios</button>
+                
+                <div style="margin-top: 15px; text-align: center;">
+                    <a th:href="@{/tienda}" class="btn" style="display: inline-block; width: auto; padding: 10px 20px;">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Librería Online - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>
