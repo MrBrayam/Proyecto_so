@@ -8,51 +8,18 @@
     <link rel="stylesheet" th:href="@{/css/finanzas.css}">
 </head>
 <body>
-    <div class="admin-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>Admin Panel</h2>
-            </div>
-            <nav class="menu">
-                <a th:href="@{/admin}" class="menu-item">
-                    <span></span> Dashboard
-                </a>
-                <a th:href="@{/admin/libros}" class="menu-item">
-                    <span></span> Libros
-                </a>
-                <a th:href="@{/admin/clientes}" class="menu-item">
-                    <span></span> Clientes
-                </a>
-                <a th:href="@{/admin/usuarios}" class="menu-item">
-                    <span></span> Usuarios
-                </a>
-                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
-                    <span></span> Pedidos Pendientes
-                </a>
-                <a th:href="@{/admin/prestamos}" class="menu-item">
-                    <span></span> Préstamos
-                </a>
-                <a th:href="@{/admin/finanzas}" class="menu-item active">
-                    <span></span> Finanzas
-                </a>
-                <a th:href="@{/admin/proveedores}" class="menu-item">
-                    <span></span> Proveedores
-                </a>
-                <a th:href="@{/admin/compras}" class="menu-item">
-                    <span></span> Compras
-                </a>
-                <a th:href="@{/admin/logout}" class="menu-item logout">
-                    <span></span> Cerrar Sesión
-                </a>
-            </nav>
-        </aside>
+    <header class="header">
+        <nav class="nav">
+            <h1>Panel de Administración</h1>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <main class="main-content">
-            <header class="content-header">
-                <h1>Finanzas</h1>
-            </header>
-
-            <div class="content-body">
+    <main class="admin-container">
+        <h2 class="page-title">Finanzas</h2>
                 <!-- Filtros -->
                 <div class="filtros-container">
                     <h3>Filtrar por período:</h3>
@@ -138,17 +105,21 @@
                                     <th>Tipo</th>
                                     <th>Descripción</th>
                                     <th>Monto</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="ingreso : ${ingresos}">
-                                    <td th:text="${#temporals.format(ingreso.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
-                                    <td>
+                                    <td data-label="Fecha" th:text="${#temporals.format(ingreso.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                                    <td data-label="Tipo">
                                         <span class="badge" th:classappend="${ingreso.tipo == 'PRESTAMO'} ? 'badge-prestamo' : 'badge-compra'"
                                               th:text="${ingreso.tipo}">COMPRA</span>
                                     </td>
-                                    <td th:text="${ingreso.descripcion}">Descripción</td>
-                                    <td th:text="'$' + ${#numbers.formatDecimal(ingreso.monto, 1, 2)}">$0.00</td>
+                                    <td data-label="Descripción" th:text="${ingreso.descripcion}">Descripción</td>
+                                    <td data-label="Monto" th:text="'$' + ${#numbers.formatDecimal(ingreso.monto, 1, 2)}">$0.00</td>
+                                    <td data-label="Acciones">
+                                        <a th:href="@{/admin/factura/{id}(id=${ingreso.id})}" class="btn btn-info">👁️ Ver</a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -168,12 +139,12 @@
                             </thead>
                             <tbody>
                                 <tr th:each="compra : ${compras}">
-                                    <td th:text="${compra.numeroFactura}">COMP-001</td>
-                                    <td th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
-                                    <td th:text="${compra.proveedor.nombre}">Proveedor</td>
-                                    <td th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</td>
-                                    <td>
-                                        <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn btn-info">Ver</a>
+                                    <td data-label="N° Factura" th:text="${compra.numeroFactura}">COMP-001</td>
+                                    <td data-label="Fecha" th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                                    <td data-label="Proveedor" th:text="${compra.proveedor.nombre}">Proveedor</td>
+                                    <td data-label="Total" th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</td>
+                                    <td data-label="Acciones">
+                                        <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn btn-info">👁️ Ver</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -181,8 +152,12 @@
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
+    </footer>
 
     <script>
         function cambiarTab(tab) {

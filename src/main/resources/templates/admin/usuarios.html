@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="admin-container">
-        <h2>Gestión de Usuarios del Sistema</h2>
-        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-primary">Nuevo Usuario</a>
+        <div class="action-header">
+            <h2 class="page-title">Gestión de Usuarios del Sistema</h2>
+            <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-nuevo">+ Nuevo Usuario</a>
+        </div>
         
-        <table class="admin-table">
+        <div class="table-container">
+            <table class="admin-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -33,21 +37,35 @@
             </thead>
             <tbody>
                 <tr th:each="usuario : ${usuarios}">
-                    <td th:text="${usuario.id}">1</td>
-                    <td th:text="${usuario.username}">Username</td>
-                    <td th:text="${usuario.email}">Email</td>
-                    <td th:text="${usuario.rol}">Rol</td>
-                    <td>
-                        <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn-small">Editar</a>
-                        <a th:href="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" class="btn-small btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                    <td data-label="ID" th:text="${usuario.id}">1</td>
+                    <td data-label="Username">
+                        <div class="usuario-info">
+                            <span class="usuario-nombre" th:text="${usuario.username}">Username</span>
+                            <span class="usuario-detalles" th:text="${usuario.email}">Email</span>
+                        </div>
+                    </td>
+                    <td data-label="Email">
+                        <a th:href="'mailto:' + ${usuario.email}" class="email-display" th:text="${usuario.email}">Email</a>
+                    </td>
+                    <td data-label="Rol">
+                        <span class="badge-rol"
+                              th:classappend="${usuario.rol == 'ADMIN'} ? 'badge-admin' : (${usuario.rol == 'BIBLIOTECARIO'} ? 'badge-bibliotecario' : 'badge-user')"
+                              th:text="${usuario.rol}">ROL</span>
+                    </td>
+                    <td data-label="Acciones">
+                        <div class="acciones">
+                            <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-small btn-primary">✏️ Editar</a>
+                            <a th:href="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" class="btn btn-small btn-danger" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">🗑️ Eliminar</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

@@ -1,136 +1,361 @@
+/* ============================================
+   FINANZAS - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Filtros */
 .filtros-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
+    background: var(--admin-white);
+    padding: 25px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
     margin-bottom: 30px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.filtros-container h3 {
+    color: var(--admin-dark);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
 .filtros-btn-group {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .filtro-btn {
     padding: 10px 20px;
-    border: 2px solid #3498db;
-    background: white;
-    color: #3498db;
-    border-radius: 5px;
+    border: 2px solid var(--admin-gray-lighter);
+    background: var(--admin-white);
+    color: var(--admin-dark);
+    border-radius: var(--admin-radius);
     cursor: pointer;
-    transition: all 0.3s;
+    font-weight: 600;
+    transition: var(--admin-transition);
 }
 
-.filtro-btn:hover, .filtro-btn.active {
-    background: #3498db;
+.filtro-btn:hover {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.filtro-btn.active {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
     color: white;
+    border-color: var(--admin-primary);
 }
 
+/* Formulario de fecha personalizada */
 .fecha-personalizada {
     display: none;
-    gap: 15px;
-    align-items: end;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: var(--admin-radius);
     margin-top: 15px;
 }
 
 .fecha-personalizada.show {
     display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
 }
 
+.fecha-personalizada .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.fecha-personalizada .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--admin-dark);
+}
+
+.fecha-personalizada .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--admin-gray-lighter);
+    border-radius: var(--admin-radius);
+    font-size: 1rem;
+}
+
+/* Resumen Financiero */
 .resumen-financiero {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
     margin-bottom: 30px;
 }
 
 .resumen-card {
-    background: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: center;
+    background: var(--admin-white);
+    padding: 30px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    border-left: 5px solid;
+    transition: var(--admin-transition);
+}
+
+.resumen-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--admin-shadow-hover);
 }
 
 .resumen-card.ingresos {
-    border-left: 5px solid #27ae60;
+    border-left-color: var(--admin-success);
 }
 
 .resumen-card.gastos {
-    border-left: 5px solid #e74c3c;
+    border-left-color: var(--admin-danger);
 }
 
 .resumen-card.balance {
-    border-left: 5px solid #3498db;
+    border-left-color: var(--admin-primary);
 }
 
 .resumen-card h3 {
-    color: #7f8c8d;
+    color: var(--admin-gray);
     font-size: 0.9rem;
-    margin-bottom: 10px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
 }
 
 .resumen-card .monto {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 10px 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .resumen-card.ingresos .monto {
-    color: #27ae60;
+    color: var(--admin-success);
 }
 
 .resumen-card.gastos .monto {
-    color: #e74c3c;
+    color: var(--admin-danger);
 }
 
 .resumen-card.balance .monto {
-    color: #3498db;
+    color: var(--admin-primary);
 }
 
 .resumen-card .detalle {
-    font-size: 0.85rem;
-    color: #95a5a6;
+    color: var(--admin-gray);
+    font-size: 0.9rem;
 }
 
+.resumen-card .detalle span {
+    font-weight: 600;
+    color: var(--admin-dark);
+}
+
+/* Tabs */
 .tabs-container {
-    margin-top: 30px;
+    background: var(--admin-white);
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    overflow: hidden;
 }
 
 .tabs {
     display: flex;
-    gap: 10px;
-    border-bottom: 2px solid #ecf0f1;
-    margin-bottom: 20px;
+    border-bottom: 2px solid var(--admin-gray-lighter);
+    background: #f8f9fa;
 }
 
 .tab {
-    padding: 15px 30px;
-    cursor: pointer;
+    flex: 1;
+    padding: 15px 20px;
     border: none;
     background: transparent;
-    color: #7f8c8d;
-    font-size: 1rem;
-    transition: all 0.3s;
+    color: var(--admin-gray);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    position: relative;
 }
 
 .tab:hover {
-    color: #3498db;
+    color: var(--admin-primary);
+    background: rgba(52, 152, 219, 0.05);
 }
 
 .tab.active {
-    color: #3498db;
-    border-bottom: 3px solid #3498db;
-    font-weight: bold;
+    color: var(--admin-primary);
+    background: var(--admin-white);
 }
 
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--admin-primary), var(--admin-primary-dark));
+}
+
+/* Tab Content */
 .tab-content {
     display: none;
+    padding: 25px;
 }
 
 .tab-content.active {
     display: block;
+}
+
+/* Tabla de datos */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--admin-white);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--admin-dark) 0%, var(--admin-dark-light) 100%);
+    color: white;
+}
+
+.data-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid var(--admin-gray-lighter);
+    transition: var(--admin-transition);
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+/* Mensaje cuando no hay datos */
+.data-table tbody tr.empty-row td {
+    text-align: center;
+    padding: 40px;
+    color: var(--admin-gray);
+    font-style: italic;
+}
+
+/* Botón info */
+.btn-info {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--admin-transition);
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .resumen-financiero {
+        grid-template-columns: 1fr;
+    }
+    
+    .filtros-btn-group {
+        flex-direction: column;
+    }
+    
+    .filtro-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .resumen-card .monto {
+        font-size: 2rem;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+    
+    .tab {
+        border-bottom: 1px solid var(--admin-gray-lighter);
+    }
+    
+    .tab.active::after {
+        height: 0;
+    }
+    
+    /* Convertir tabla en tarjetas */
+    .data-table {
+        display: block;
+    }
+    
+    .data-table thead {
+        display: none;
+    }
+    
+    .data-table tbody {
+        display: block;
+    }
+    
+    .data-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        background: white;
+        border: 1px solid var(--admin-gray-lighter);
+        border-radius: var(--admin-radius);
+        padding: 15px;
+    }
+    
+    .data-table tbody td {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+        text-align: left;
+        padding-top: 15px;
+    }
+    
+    .data-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .btn-info {
+        width: 100%;
+        padding: 12px 16px;
+        text-align: center;
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
 }
