@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <style>
+        .filtros-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .filtros-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filtro-btn {
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filtro-btn:hover, .filtro-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .fecha-personalizada {
+            display: none;
+            gap: 15px;
+            align-items: end;
+            margin-top: 15px;
+        }
+        
+        .fecha-personalizada.show {
+            display: flex;
+        }
+        
+        .resumen-financiero {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .resumen-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .resumen-card.ingresos {
+            border-left: 5px solid #27ae60;
+        }
+        
+        .resumen-card.gastos {
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .resumen-card.balance {
+            border-left: 5px solid #3498db;
+        }
+        
+        .resumen-card h3 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .resumen-card .monto {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .resumen-card.ingresos .monto {
+            color: #27ae60;
+        }
+        
+        .resumen-card.gastos .monto {
+            color: #e74c3c;
+        }
+        
+        .resumen-card.balance .monto {
+            color: #3498db;
+        }
+        
+        .resumen-card .detalle {
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+        
+        .tabs-container {
+            margin-top: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #7f8c8d;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #3498db;
+        }
+        
+        .tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>📚 Admin Panel</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/admin}" class="menu-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a th:href="@{/admin/libros}" class="menu-item">
+                    <span>📖</span> Libros
+                </a>
+                <a th:href="@{/admin/clientes}" class="menu-item">
+                    <span>👥</span> Clientes
+                </a>
+                <a th:href="@{/admin/usuarios}" class="menu-item">
+                    <span>👤</span> Usuarios
+                </a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
+                    <span>⏳</span> Pedidos Pendientes
+                </a>
+                <a th:href="@{/admin/prestamos}" class="menu-item">
+                    <span>📚</span> Préstamos
+                </a>
+                <a th:href="@{/admin/finanzas}" class="menu-item active">
+                    <span>💰</span> Finanzas
+                </a>
+                <a th:href="@{/admin/proveedores}" class="menu-item">
+                    <span>🏢</span> Proveedores
+                </a>
+                <a th:href="@{/admin/compras}" class="menu-item">
+                    <span>🛒</span> Compras
+                </a>
+                <a th:href="@{/admin/logout}" class="menu-item logout">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Finanzas</h1>
+            </header>
+
+            <div class="content-body">
+                <!-- Filtros -->
+                <div class="filtros-container">
+                    <h3>Filtrar por período:</h3>
+                    <div class="filtros-btn-group">
+                        <button class="filtro-btn" th:classappend="${filtroActual == 'todo'} ? 'active' : ''" 
+                                onclick="location.href='/admin/finanzas'">
+                            Todo el tiempo
+                        </button>
+                        <button class="filtro-btn" th:classappend="${filtroActual == 'hoy'} ? 'active' : ''" 
+                                onclick="location.href='/admin/finanzas?filtro=hoy'">
+                            Hoy
+                        </button>
+                        <button class="filtro-btn" th:classappend="${filtroActual == 'semana'} ? 'active' : ''" 
+                                onclick="location.href='/admin/finanzas?filtro=semana'">
+                            Última semana
+                        </button>
+                        <button class="filtro-btn" th:classappend="${filtroActual == 'mes'} ? 'active' : ''" 
+                                onclick="location.href='/admin/finanzas?filtro=mes'">
+                            Último mes
+                        </button>
+                        <button class="filtro-btn" th:classappend="${filtroActual == 'personalizado'} ? 'active' : ''" 
+                                onclick="togglePersonalizado()">
+                            Personalizado
+                        </button>
+                    </div>
+                    
+                    <form id="formPersonalizado" class="fecha-personalizada" th:classappend="${filtroActual == 'personalizado'} ? 'show' : ''" 
+                          th:action="@{/admin/finanzas}" method="get">
+                        <input type="hidden" name="filtro" value="personalizado">
+                        <div class="form-group">
+                            <label>Fecha Inicio:</label>
+                            <input type="date" name="fechaInicio" th:value="${fechaInicio}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Fin:</label>
+                            <input type="date" name="fechaFin" th:value="${fechaFin}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                    </form>
+                </div>
+
+                <!-- Resumen Financiero -->
+                <div class="resumen-financiero">
+                    <div class="resumen-card ingresos">
+                        <h3>Total Ingresos</h3>
+                        <div class="monto" th:text="'$' + ${#numbers.formatDecimal(totalIngresos, 1, 2)}">$0.00</div>
+                        <div class="detalle">
+                            Compras: <span th:text="'$' + ${#numbers.formatDecimal(ingresosCompras, 1, 2)}">$0.00</span><br>
+                            Préstamos: <span th:text="'$' + ${#numbers.formatDecimal(ingresosPrestamos, 1, 2)}">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="resumen-card gastos">
+                        <h3>Total Gastos</h3>
+                        <div class="monto" th:text="'$' + ${#numbers.formatDecimal(totalGastos, 1, 2)}">$0.00</div>
+                        <div class="detalle">Compras a proveedores</div>
+                    </div>
+                    
+                    <div class="resumen-card balance">
+                        <h3>Balance Neto</h3>
+                        <div class="monto" th:text="'$' + ${#numbers.formatDecimal(balance, 1, 2)}">$0.00</div>
+                        <div class="detalle" th:text="${balance >= 0} ? 'Ganancia' : 'Pérdida'">-</div>
+                    </div>
+                </div>
+
+                <!-- Tabs de Ingresos y Gastos -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab active" onclick="cambiarTab('ingresos')">
+                            📈 Ingresos (<span th:text="${#lists.size(ingresos)}">0</span>)
+                        </button>
+                        <button class="tab" onclick="cambiarTab('gastos')">
+                            📉 Gastos (<span th:text="${#lists.size(compras)}">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- Tab de Ingresos -->
+                    <div id="tab-ingresos" class="tab-content active">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Descripción</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ingreso : ${ingresos}">
+                                    <td th:text="${#temporals.format(ingreso.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                                    <td>
+                                        <span class="badge" th:classappend="${ingreso.tipo == 'PRESTAMO'} ? 'badge-prestamo' : 'badge-compra'"
+                                              th:text="${ingreso.tipo}">COMPRA</span>
+                                    </td>
+                                    <td th:text="${ingreso.descripcion}">Descripción</td>
+                                    <td th:text="'$' + ${#numbers.formatDecimal(ingreso.monto, 1, 2)}">$0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Tab de Gastos -->
+                    <div id="tab-gastos" class="tab-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Factura</th>
+                                    <th>Fecha</th>
+                                    <th>Proveedor</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="compra : ${compras}">
+                                    <td th:text="${compra.numeroFactura}">COMP-001</td>
+                                    <td th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                                    <td th:text="${compra.proveedor.nombre}">Proveedor</td>
+                                    <td th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</td>
+                                    <td>
+                                        <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn btn-info">Ver</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function cambiarTab(tab) {
+            // Remover active de todos los tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Activar el tab seleccionado
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+        
+        function togglePersonalizado() {
+            const form = document.getElementById('formPersonalizado');
+            form.classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

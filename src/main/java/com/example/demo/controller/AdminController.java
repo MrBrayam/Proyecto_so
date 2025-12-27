@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -256,24 +257,93 @@ public class AdminController {
         return "redirect:/admin/prestamos";
     }
 
-    // Ingresos
-    @GetMapping("/ingresos")
-    public String listarIngresos(Model model, HttpSession session) {
+    // Finanzas
+    @GetMapping("/finanzas")
+    public String verFinanzas(@RequestParam(required = false) String filtro,
+                              @RequestParam(required = false) String fechaInicio,
+                              @RequestParam(required = false) String fechaFin,
+                              Model model, HttpSession session) {
         if (session.getAttribute("usuarioLogueado") == null) {
             return "redirect:/admin/login";
         }
         
-        model.addAttribute("ingresos", ingresoRepository.findAll());
+        LocalDateTime inicio = null;
+        LocalDateTime fin = LocalDateTime.now();
         
-        Double totalIngresos = ingresoRepository.calcularIngresoTotal();
-        Double ingresosCompras = ingresoRepository.calcularIngresoPorTipo("COMPRA");
-        Double ingresosPrestamos = ingresoRepository.calcularIngresoPorTipo("PRESTAMO");
+        // Determinar el rango de fechas según el filtro
+        if (filtro != null) {
+            switch (filtro) {
+                case "hoy":
+                    inicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+                    break;
+                case "semana":
+                    inicio = LocalDateTime.now().minusDays(7);
+                    break;
+                case "mes":
+                    inicio = LocalDateTime.now().minusMonths(1);
+                    break;
+                case "personalizado":
+                    if (fechaInicio != null && !fechaInicio.isEmpty()) {
+                        inicio = LocalDateTime.parse(fechaInicio + "T00:00:00");
+                    }
+                    if (fechaFin != null && !fechaFin.isEmpty()) {
+                        fin = LocalDateTime.parse(fechaFin + "T23:59:59");
+                    }
+                    break;
+            }
+        }
+        
+        // Calcular ingresos
+        Double totalIngresos;
+        Double ingresosCompras;
+        Double ingresosPrestamos;
+        List<Ingreso> ingresos;
+        
+        if (inicio != null) {
+            totalIngresos = ingresoRepository.calcularIngresoTotalPorFecha(inicio, fin);
+            ingresosCompras = ingresoRepository.calcularIngresoPorTipoYFecha("COMPRA", inicio, fin);
+            ingresosPrestamos = ingresoRepository.calcularIngresoPorTipoYFecha("PRESTAMO", inicio, fin);
+            ingresos = ingresoRepository.findByFechaBetween(inicio, fin);
+        } else {
+            totalIngresos = ingresoRepository.calcularIngresoTotal();
+            ingresosCompras = ingresoRepository.calcularIngresoPorTipo("COMPRA");
+            ingresosPrestamos = ingresoRepository.calcularIngresoPorTipo("PRESTAMO");
+            ingresos = ingresoRepository.findAll();
+        }
+        
+        // Calcular gastos (compras a proveedores)
+        Double totalGastos;
+        List<Compra> compras;
+        
+        if (inicio != null) {
+            totalGastos = compraRepository.calcularGastoTotalPorFecha(inicio, fin);
+            compras = compraRepository.findByFechaCompraBetween(inicio, fin);
+        } else {
+            totalGastos = compraRepository.calcularGastoTotal();
+            compras = compraRepository.findAll();
+        }
+        
+        // Calcular balance
+        Double balance = (totalIngresos != null ? totalIngresos : 0.0) - (totalGastos != null ? totalGastos : 0.0);
         
         model.addAttribute("totalIngresos", totalIngresos != null ? totalIngresos : 0.0);
         model.addAttribute("ingresosCompras", ingresosCompras != null ? ingresosCompras : 0.0);
         model.addAttribute("ingresosPrestamos", ingresosPrestamos != null ? ingresosPrestamos : 0.0);
+        model.addAttribute("totalGastos", totalGastos != null ? totalGastos : 0.0);
+        model.addAttribute("balance", balance);
+        model.addAttribute("ingresos", ingresos);
+        model.addAttribute("compras", compras);
+        model.addAttribute("filtroActual", filtro != null ? filtro : "todo");
+        model.addAttribute("fechaInicio", fechaInicio);
+        model.addAttribute("fechaFin", fechaFin);
         
-        return "admin/ingresos";
+        return "admin/finanzas";
+    }
+    
+    // Mantener compatibilidad con la ruta anterior
+    @GetMapping("/ingresos")
+    public String listarIngresos(HttpSession session) {
+        return "redirect:/admin/finanzas";
     }
 
     // Pedidos Pendientes
