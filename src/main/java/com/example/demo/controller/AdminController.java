@@ -285,45 +285,65 @@ public class AdminController {
             return "redirect:/admin/pedidos-pendientes";
         }
 
-        // Asignar usuario que atendió
-        pedido.setUsuario(usuario);
-        
-        // Cambiar estado según tipo
-        if (pedido.getTipo().equals("PRESTAMO")) {
-            pedido.setEstado("ACTIVO");
-        } else {
-            pedido.setEstado("COMPLETADO");
+        // Verificar que si es factura, el cliente tenga RUC
+        if (tipoDocumento.equals("FACTURA") && 
+            (pedido.getCliente().getRuc() == null || pedido.getCliente().getRuc().isEmpty())) {
+            tipoDocumento = "BOLETA"; // Forzar boleta si no tiene RUC
         }
 
-        // Reducir stock
-        Libro libro = pedido.getLibro();
-        libro.setStock(libro.getStock() - 1);
-        libroRepository.save(libro);
-        pedidoRepository.save(pedido);
+        try {
+            // Asignar usuario que atendió
+            pedido.setUsuario(usuario);
+            pedido.setTipoDocumento(tipoDocumento); // Actualizar tipo de documento
+            
+            // Cambiar estado según tipo
+            if (pedido.getTipo().equals("PRESTAMO")) {
+                pedido.setEstado("ACTIVO");
+            } else {
+                pedido.setEstado("COMPLETADO");
+            }
 
-        // Registrar ingreso
-        Ingreso ingreso = new Ingreso();
-        ingreso.setPedido(pedido);
-        ingreso.setMonto(pedido.getPrecio());
-        ingreso.setTipo(pedido.getTipo());
-        ingreso.setDescripcion(pedido.getTipo().equals("PRESTAMO") ? 
-            "Préstamo de libro: " + libro.getTitulo() : 
-            "Compra de libro: " + libro.getTitulo());
-        ingreso.setFecha(LocalDateTime.now());
-        ingresoRepository.save(ingreso);
+            // Reducir stock
+            Libro libro = pedido.getLibro();
+            if (libro != null && libro.getStock() > 0) {
+                libro.setStock(libro.getStock() - 1);
+                libroRepository.save(libro);
+            }
+            pedidoRepository.save(pedido);
 
-        // Generar factura/boleta
-        Factura factura = new Factura();
-        factura.setPedido(pedido);
-        factura.setUsuario(usuario);
-        factura.setTipoDocumento(tipoDocumento);
-        factura.setSubtotal(pedido.getPrecio());
-        factura.setImpuesto(pedido.getPrecio() * 0.19);
-        factura.setTotal(pedido.getPrecio() + (pedido.getPrecio() * 0.19));
-        Factura facturaGuardada = facturaRepository.save(factura);
+            // Verificar que el precio no sea null
+            Double precio = pedido.getPrecio();
+            if (precio == null) {
+                precio = 0.0;
+            }
 
-        // Redirigir a la factura
-        return "redirect:/admin/factura/" + facturaGuardada.getId();
+            // Registrar ingreso
+            Ingreso ingreso = new Ingreso();
+            ingreso.setPedido(pedido);
+            ingreso.setMonto(precio);
+            ingreso.setTipo(pedido.getTipo());
+            ingreso.setDescripcion(pedido.getTipo().equals("PRESTAMO") ? 
+                "Préstamo de libro: " + (libro != null ? libro.getTitulo() : "N/A") : 
+                "Compra de libro: " + (libro != null ? libro.getTitulo() : "N/A"));
+            ingreso.setFecha(LocalDateTime.now());
+            ingresoRepository.save(ingreso);
+
+            // Generar factura/boleta
+            Factura factura = new Factura();
+            factura.setPedido(pedido);
+            factura.setUsuario(usuario);
+            factura.setTipoDocumento(tipoDocumento);
+            factura.setSubtotal(precio);
+            factura.setImpuesto(precio * 0.19);
+            factura.setTotal(precio + (precio * 0.19));
+            Factura facturaGuardada = facturaRepository.save(factura);
+
+            // Redirigir a la factura
+            return "redirect:/admin/factura/" + facturaGuardada.getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/pedidos-pendientes?error=" + e.getMessage();
+        }
     }
 
     @GetMapping("/factura/{id}")
@@ -336,6 +356,17 @@ public class AdminController {
         Factura factura = facturaRepository.findById(id).orElse(null);
         if (factura == null) {
             return "redirect:/admin/pedidos-pendientes";
+        }
+
+        // Cargar explícitamente las relaciones para evitar LazyInitializationException
+        if (factura.getPedido() != null) {
+            factura.getPedido().getCliente().getNombre(); // Forzar carga
+            factura.getPedido().getLibro().getTitulo(); // Forzar carga
+        }
+        
+        // Cargar usuario (bibliotecario)
+        if (factura.getUsuario() != null) {
+            factura.getUsuario().getUsername(); // Forzar carga
         }
 
         model.addAttribute("factura", factura);

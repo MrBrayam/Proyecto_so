@@ -28,6 +28,8 @@ public class Pedido {
     @Column(nullable = false)
     private String tipo; // "PRESTAMO" o "COMPRA"
     
+    private String tipoDocumento; // "BOLETA" o "FACTURA"
+    
     @Column(nullable = false)
     private LocalDateTime fechaPedido;
     

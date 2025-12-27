@@ -79,7 +79,7 @@
 <body>
     <header>
         <nav>
-            <h1>📚 Librería Online</h1>
+            <h1>Librería Online</h1>
             <ul>
                 <li><a th:href="@{/tienda}">Tienda</a></li>
                 <li th:if="${session.clienteLogueado != null}" class="user-menu">
@@ -97,7 +97,7 @@
     <main class="container">
         <div class="perfil-container">
             <div class="perfil-header">
-                <h2>👤 Mi Perfil</h2>
+                <h2>Mi Perfil</h2>
             </div>
 
             <div th:if="${mensaje}" class="alert-success">
@@ -105,7 +105,7 @@
             </div>
 
             <div th:if="${cliente.ruc == null || cliente.ruc == ''}" class="alert-warning">
-                <strong>⚠️ Atención:</strong> Para poder solicitar facturas, debes agregar tu RUC.
+                <strong>Atención:</strong> Para poder solicitar facturas, debes agregar tu RUC.
             </div>
 
             <form th:action="@{/cliente/perfil/actualizar}" th:object="${cliente}" method="post" class="perfil-form">
@@ -150,7 +150,7 @@
                 </div>
 
                 <div class="alert-info">
-                    <strong>💡 Cambiar contraseña:</strong> Déjalo en blanco si no deseas cambiarla
+                    <strong>Cambiar contraseña:</strong> Déjalo en blanco si no deseas cambiarla
                 </div>
 
                 <div class="form-group">
@@ -158,7 +158,7 @@
                     <input type="password" name="password" id="password" placeholder="Dejar vacío para mantener la actual">
                 </div>
 
-                <button type="submit" class="btn btn-guardar">💾 Guardar Cambios</button>
+                <button type="submit" class="btn btn-guardar">Guardar Cambios</button>
                 
                 <div style="margin-top: 15px; text-align: center;">
                     <a th:href="@{/tienda}" class="btn" style="display: inline-block; width: auto; padding: 10px 20px;">Cancelar</a>

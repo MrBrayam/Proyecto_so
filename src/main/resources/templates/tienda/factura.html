@@ -173,7 +173,7 @@
 <body>
     <div class="factura-container">
         <div class="factura-header">
-            <h1 th:text="${factura.tipoDocumento == 'FACTURA'} ? '📄 FACTURA' : '🧾 BOLETA'">📄 FACTURA</h1>
+            <h1 th:text="${factura.tipoDocumento == 'FACTURA'} ? 'FACTURA' : 'BOLETA'">FACTURA</h1>
             <p class="factura-numero" th:text="'N° ' + ${factura.numeroFactura}">N° FAC-000001</p>
             <p class="factura-numero" th:text="'Fecha: ' + ${#temporals.format(factura.fechaEmision, 'dd/MM/yyyy HH:mm')}">Fecha: 01/01/2024</p>
         </div>

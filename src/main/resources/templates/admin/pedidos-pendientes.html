@@ -64,22 +64,18 @@
                             </td>
                             <td th:text="'$' + ${#numbers.formatDecimal(pedido.precio, 1, 2)}">$0.00</td>
                             <td>
-                                <span th:if="${session['tipoDocumentoPedido_' + pedido.id] != null}"
-                                      th:text="${session['tipoDocumentoPedido_' + pedido.id]}">BOLETA</span>
-                                <span th:unless="${session['tipoDocumentoPedido_' + pedido.id] != null}">
-                                    BOLETA
-                                </span>
+                                <span th:text="${pedido.tipoDocumento != null ? pedido.tipoDocumento : 'BOLETA'}">BOLETA</span>
                             </td>
                             <td>
                                 <form th:action="@{/admin/pedidos/{id}/confirmar(id=${pedido.id})}" method="post" style="display: inline;">
                                     <!-- Tipo de documento -->
                                     <select name="tipoDocumento" required style="margin-bottom: 5px;">
                                         <option value="BOLETA" 
-                                                th:selected="${session['tipoDocumentoPedido_' + pedido.id] == 'BOLETA'}">
+                                                th:selected="${pedido.tipoDocumento == 'BOLETA' || pedido.tipoDocumento == null}">
                                             Boleta
                                         </option>
                                         <option value="FACTURA" 
-                                                th:selected="${session['tipoDocumentoPedido_' + pedido.id] == 'FACTURA'}"
+                                                th:selected="${pedido.tipoDocumento == 'FACTURA'}"
                                                 th:disabled="${pedido.cliente.ruc == null || pedido.cliente.ruc == ''}">
                                             Factura
                                             <span th:if="${pedido.cliente.ruc == null || pedido.cliente.ruc == ''}">(Sin RUC)</span>

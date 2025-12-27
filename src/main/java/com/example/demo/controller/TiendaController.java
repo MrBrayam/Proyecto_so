@@ -55,14 +55,6 @@ public class TiendaController {
             return "redirect:/cliente/login";
         }
 
-        // Validar que si quiere factura, tenga RUC
-        if (tipoDocumento.equals("FACTURA") && (cliente.getRuc() == null || cliente.getRuc().isEmpty())) {
-            model.addAttribute("error", "Debes agregar tu RUC en tu perfil para solicitar una factura");
-            Libro libro = libroRepository.findById(id).orElse(null);
-            model.addAttribute("libro", libro);
-            return "tienda/detalle";
-        }
-
         Libro libro = libroRepository.findById(id).orElse(null);
         if (libro == null || libro.getStock() <= 0) {
             model.addAttribute("error", "Libro no disponible");
@@ -75,6 +67,7 @@ public class TiendaController {
         pedido.setCliente(cliente);
         pedido.setLibro(libro);
         pedido.setTipo(tipo); // "PRESTAMO" o "COMPRA"
+        pedido.setTipoDocumento(tipoDocumento); // "BOLETA" o "FACTURA"
         pedido.setFechaPedido(LocalDateTime.now());
         pedido.setEstado("PENDIENTE"); // Estado pendiente hasta que el admin confirme
         
@@ -89,14 +82,9 @@ public class TiendaController {
 
         // Guardar el pedido pendiente
         pedidoRepository.save(pedido);
-        
-        // Guardar el tipo de documento en sesión para este pedido
-        session.setAttribute("tipoDocumentoPedido_" + pedido.getId(), tipoDocumento);
 
-        model.addAttribute("mensaje", "Solicitud enviada. Diríjase al bibliotecario para confirmar su " + 
-                                      (tipo.equals("PRESTAMO") ? "préstamo" : "compra"));
-        model.addAttribute("libro", libro);
-        return "tienda/detalle";
+        // Redirigir a mis pedidos
+        return "redirect:/cliente/mis-pedidos";
     }
 
     // Eliminar el endpoint de factura de tienda (se moverá a admin)

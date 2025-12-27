@@ -200,7 +200,7 @@
             
             <div class="info-section" style="grid-column: 1 / -1; margin-top: 20px;">
                 <h3>Atendido por</h3>
-                <p><strong>Bibliotecario:</strong> <span th:text="${factura.usuario != null ? factura.usuario.nombre : 'N/A'}">Usuario</span></p>
+                <p><strong>Bibliotecario:</strong> <span th:text="${factura.usuario != null ? factura.usuario.username : 'N/A'}">Usuario</span></p>
                 <p th:if="${factura.usuario != null}"><strong>Email:</strong> <span th:text="${factura.usuario.email}">email</span></p>
             </div>
         </div>
