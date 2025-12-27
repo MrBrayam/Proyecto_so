@@ -108,10 +108,22 @@ public class AdminController {
             return "redirect:/admin/login";
         }
         
+        // Calcular balance de hoy para finanzas
+        LocalDateTime hoyInicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime hoyFin = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        Double ingresosHoy = ingresoRepository.calcularIngresoTotalPorFecha(hoyInicio, hoyFin);
+        Double gastosHoy = compraRepository.calcularGastoTotalPorFecha(hoyInicio, hoyFin);
+        Double balanceHoy = (ingresosHoy != null ? ingresosHoy : 0.0) - (gastosHoy != null ? gastosHoy : 0.0);
+        
         model.addAttribute("usuario", usuario);
         model.addAttribute("totalLibros", libroRepository.count());
         model.addAttribute("totalClientes", clienteRepository.count());
         model.addAttribute("totalUsuarios", usuarioRepository.count());
+        model.addAttribute("totalPedidosPendientes", pedidoRepository.findByEstado("PENDIENTE").size());
+        model.addAttribute("totalPrestamos", pedidoRepository.findByTipoAndEstado("PRESTAMO", "ACTIVO").size());
+        model.addAttribute("balanceHoy", balanceHoy);
+        model.addAttribute("totalProveedores", proveedorRepository.count());
+        model.addAttribute("gastoHoy", gastosHoy != null ? gastosHoy : 0.0);
         return "admin/dashboard";
     }
 
@@ -396,11 +408,19 @@ public class AdminController {
         // Calcular balance
         Double balance = (totalIngresos != null ? totalIngresos : 0.0) - (totalGastos != null ? totalGastos : 0.0);
         
+        // Calcular balance de hoy
+        LocalDateTime hoyInicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime hoyFin = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        Double ingresosHoy = ingresoRepository.calcularIngresoTotalPorFecha(hoyInicio, hoyFin);
+        Double gastosHoy = compraRepository.calcularGastoTotalPorFecha(hoyInicio, hoyFin);
+        Double balanceHoy = (ingresosHoy != null ? ingresosHoy : 0.0) - (gastosHoy != null ? gastosHoy : 0.0);
+        
         model.addAttribute("totalIngresos", totalIngresos != null ? totalIngresos : 0.0);
         model.addAttribute("ingresosCompras", ingresosCompras != null ? ingresosCompras : 0.0);
         model.addAttribute("ingresosPrestamos", ingresosPrestamos != null ? ingresosPrestamos : 0.0);
         model.addAttribute("totalGastos", totalGastos != null ? totalGastos : 0.0);
         model.addAttribute("balance", balance);
+        model.addAttribute("balanceHoy", balanceHoy);
         model.addAttribute("ingresos", ingresos);
         model.addAttribute("compras", compras);
         model.addAttribute("filtroActual", filtro != null ? filtro : "todo");
@@ -565,6 +585,7 @@ public class AdminController {
         }
         
         model.addAttribute("proveedores", proveedorRepository.findAll());
+        model.addAttribute("totalProveedores", proveedorRepository.count());
         return "admin/proveedores";
     }
 
@@ -616,7 +637,13 @@ public class AdminController {
             return "redirect:/admin/login";
         }
         
+        // Calcular gasto de hoy
+        LocalDateTime hoyInicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime hoyFin = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        Double gastoHoy = compraRepository.calcularGastoTotalPorFecha(hoyInicio, hoyFin);
+        
         model.addAttribute("compras", compraRepository.findAll());
+        model.addAttribute("gastoHoy", gastoHoy != null ? gastoHoy : 0.0);
         return "admin/compras";
     }
 

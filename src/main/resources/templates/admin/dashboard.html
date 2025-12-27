@@ -46,7 +46,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>Pedidos Pendientes</h3>
-                    <p class="stat-number">-</p>
+                    <p class="stat-number" th:text="${totalPedidosPendientes}">0</p>
                 </div>
                 <a th:href="@{/admin/pedidos-pendientes}" class="btn btn-primary">Gestionar</a>
             </div>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>Préstamos</h3>
-                    <p class="stat-number">-</p>
+                    <p class="stat-number" th:text="${totalPrestamos}">0</p>
                 </div>
                 <a th:href="@{/admin/prestamos}" class="btn btn-primary">Gestionar</a>
             </div>
@@ -102,7 +102,8 @@
                 </div>
                 <div class="stat-content">
                     <h3>Finanzas</h3>
-                    <p class="stat-number">-</p>
+                    <p class="stat-number" th:text="'$' + ${#numbers.formatDecimal(balanceHoy, 1, 2)}">$0.00</p>
+                    <small style="font-size: 0.8rem; color: #7f8c8d;">Balance de Hoy</small>
                 </div>
                 <a th:href="@{/admin/finanzas}" class="btn btn-primary">Ver Reporte</a>
             </div>
@@ -113,7 +114,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>Proveedores</h3>
-                    <p class="stat-number">-</p>
+                    <p class="stat-number" th:text="${totalProveedores}">0</p>
                 </div>
                 <a th:href="@{/admin/proveedores}" class="btn btn-primary">Gestionar</a>
             </div>
@@ -124,7 +125,8 @@
                 </div>
                 <div class="stat-content">
                     <h3>Compras</h3>
-                    <p class="stat-number">-</p>
+                    <p class="stat-number" th:text="'$' + ${#numbers.formatDecimal(gastoHoy, 1, 2)}">$0.00</p>
+                    <small style="font-size: 0.8rem; color: #7f8c8d;">Gasto de Hoy</small>
                 </div>
                 <a th:href="@{/admin/compras}" class="btn btn-primary">Ver Compras</a>
             </div>
