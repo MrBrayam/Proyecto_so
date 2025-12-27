@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${libro.titulo}">Detalle del Libro</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/tienda-detalle.css}">
 </head>
 <body>
     <header>
@@ -42,37 +43,37 @@
                 <p class="descripcion" th:text="${libro.descripcion}">Descripción del libro</p>
                 
                 <div th:if="${libro.stock > 0 && session.clienteLogueado != null}" class="acciones-libro">
-                    <div th:if="${mensaje}" class="alert-success" style="margin-bottom: 15px;">
-                        <p th:text="${mensaje}">Mensaje</p>
-                    </div>
+                <div th:if="${mensaje}" class="alert-success">
+                    <p th:text="${mensaje}">Mensaje</p>
+                </div>
                     
-                    <h3 style="margin-bottom: 15px;">Selecciona una opción:</h3>
+                    <h3>Selecciona una opción:</h3>
                     
                     <!-- Comprar -->
-                    <div style="margin-bottom: 20px; padding: 15px; border: 2px solid #27ae60; border-radius: 8px;">
-                        <h4 style="color: #27ae60; margin-top: 0;">Comprar</h4>
+                    <div class="opcion-compra">
+                        <h4>Comprar</h4>
                         <p>Precio: <strong th:text="'$' + ${libro.precio}">$0.00</strong></p>
                         
                         <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post">
                             <input type="hidden" name="tipo" value="COMPRA">
                             <input type="hidden" name="tipoDocumento" value="BOLETA">
-                            <button type="submit" class="btn btn-comprar" style="margin-top: 10px;">Solicitar Compra</button>
+                            <button type="submit" class="btn btn-comprar">Solicitar Compra</button>
                         </form>
                     </div>
                     
                     <!-- Préstamo -->
-                    <div style="padding: 15px; border: 2px solid #f39c12; border-radius: 8px;">
-                        <h4 style="color: #f39c12; margin-top: 0;">Solicitar Préstamo</h4>
+                    <div class="opcion-prestamo">
+                        <h4>Solicitar Préstamo</h4>
                         <p>Precio: <strong th:text="'$' + ${libro.precioPrestamo}">$0.00</strong></p>
                         
                         <form th:action="@{/tienda/libro/{id}/comprar(id=${libro.id})}" method="post">
                             <input type="hidden" name="tipo" value="PRESTAMO">
                             <input type="hidden" name="tipoDocumento" value="BOLETA">
-                            <button type="submit" class="btn btn-prestar" style="margin-top: 10px;">Solicitar Préstamo</button>
+                            <button type="submit" class="btn btn-prestar">Solicitar Préstamo</button>
                         </form>
                     </div>
                     
-                    <p style="margin-top: 15px; color: #7f8c8d; font-size: 0.9rem;">
+                    <p>
                         <strong>Nota:</strong> Dirígete al bibliotecario para confirmar tu pedido.
                     </p>
                 </div>

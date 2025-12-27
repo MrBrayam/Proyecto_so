@@ -1,0 +1,164 @@
+/* ============================================
+   CLIENTE - MIS PEDIDOS
+   ============================================ */
+
+/* Mensaje vacío */
+.empty-message {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.empty-message p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+/* Tabla de pedidos */
+.pedidos-table {
+    width: 100%;
+    background: white;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.pedidos-table thead {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+}
+
+.pedidos-table thead th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pedidos-table tbody td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #ecf0f1;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.pedidos-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.pedidos-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.pedidos-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-prestamo {
+    background-color: #fff3e0;
+    color: #e67e22;
+    border: 1px solid #f39c12;
+}
+
+.badge-compra {
+    background-color: #e8f8f5;
+    color: #229954;
+    border: 1px solid #27ae60;
+}
+
+.badge-activo {
+    background-color: #ebf5fb;
+    color: #2471a3;
+    border: 1px solid #3498db;
+}
+
+.badge-pendiente {
+    background-color: #fef5e7;
+    color: #b9770e;
+    border: 1px solid #f39c12;
+}
+
+.badge-devuelto {
+    background-color: #eaecee;
+    color: #5d6d7e;
+    border: 1px solid #95a5a6;
+}
+
+.badge-completado {
+    background-color: #e8f8f5;
+    color: #229954;
+    border: 1px solid #27ae60;
+}
+
+/* Responsive para tablets */
+@media (max-width: 992px) {
+    .pedidos-table thead th,
+    .pedidos-table tbody td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Responsive para móviles - convertir tabla en cards */
+@media (max-width: 768px) {
+    .pedidos-table {
+        border: none;
+        box-shadow: none;
+    }
+    
+    .pedidos-table thead {
+        display: none;
+    }
+    
+    .pedidos-table tbody {
+        display: block;
+    }
+    
+    .pedidos-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 15px;
+    }
+    
+    .pedidos-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #ecf0f1;
+    }
+    
+    .pedidos-table tbody td:last-child {
+        border-bottom: none;
+    }
+    
+    .pedidos-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #2c3e50;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+}

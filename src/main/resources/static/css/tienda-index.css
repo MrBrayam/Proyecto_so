@@ -1,0 +1,126 @@
+/* ============================================
+   TIENDA - INDEX (Catálogo de Libros)
+   ============================================ */
+
+/* Grid de Catálogo */
+.libros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 2rem;
+    padding: 20px 0;
+}
+
+/* Tarjeta de Libro */
+.libro-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.libro-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Imagen del Libro */
+.libro-imagen {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    background-color: #f8f9fa;
+}
+
+/* Información del Libro */
+.libro-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.libro-info h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    min-height: 2.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.libro-info .autor {
+    color: #7f8c8d;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.libro-info .precio {
+    font-size: 1.5rem;
+    color: #27ae60;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.libro-info .stock {
+    color: #3498db;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.libro-info .sin-stock {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: #fee;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Botón de la tarjeta */
+.libro-info .btn {
+    margin-top: auto;
+    text-align: center;
+    padding: 12px 20px;
+    font-weight: 500;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .libros-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .libro-imagen {
+        height: 280px;
+    }
+    
+    .libro-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .libro-info .precio {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .libros-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}

@@ -1,0 +1,154 @@
+/* ============================================
+   CLIENTE - LOGIN Y REGISTRO
+   ============================================ */
+
+/* Contenedor del formulario */
+.login-container {
+    max-width: 500px;
+    margin: 3rem auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Formulario */
+.login-form {
+    width: 100%;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.login-form .form-group input,
+.login-form .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.login-form .form-group input:focus,
+.login-form .form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.login-form .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Botón primario */
+.login-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.login-form .btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.login-form .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Enlace de registro/login */
+.register-link {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.register-link p {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+.register-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Alertas */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-error {
+    background-color: #fee;
+    color: #c0392b;
+    border-left: 4px solid #e74c3c;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #27ae60;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .login-container {
+        margin: 2rem 15px;
+        padding: 30px 20px;
+    }
+    
+    .login-container h2 {
+        font-size: 1.5rem;
+    }
+}
