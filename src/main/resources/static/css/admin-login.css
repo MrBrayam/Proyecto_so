@@ -1,10 +1,10 @@
 /* ============================================
-   CLIENTE - LOGIN Y REGISTRO
+   ADMIN - LOGIN
    ============================================ */
 
 /* Contenedor del formulario */
 .login-container {
-    max-width: 900px;
+    max-width: 500px;
     margin: 3rem auto;
     background: white;
     padding: 40px;
@@ -25,11 +25,11 @@
     width: 100%;
 }
 
-.login-form .form-group {
+.form-group {
     margin-bottom: 20px;
 }
 
-.login-form .form-group label {
+.form-group label {
     display: block;
     margin-bottom: 8px;
     color: #2c3e50;
@@ -37,8 +37,7 @@
     font-size: 0.95rem;
 }
 
-.login-form .form-group input,
-.login-form .form-group textarea {
+.form-group input {
     width: 100%;
     padding: 12px 15px;
     border: 2px solid #e0e0e0;
@@ -47,20 +46,15 @@
     transition: all 0.3s ease;
 }
 
-.login-form .form-group input:focus,
-.login-form .form-group textarea:focus {
+.form-group input:focus {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
-.login-form .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* Botón primario */
-.login-form .btn-primary {
+/* Botones */
+.btn {
+    display: inline-block;
     width: 100%;
     padding: 14px;
     background-color: #3498db;
@@ -71,50 +65,52 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
     margin-top: 10px;
 }
 
-.login-form .btn-primary:hover {
+.btn:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
-.login-form .btn-primary:active {
+.btn:active {
     transform: translateY(0);
 }
 
-/* Enlace de registro/login */
-.register-link {
-    text-align: center;
+.btn-login {
+    background-color: #3498db;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    margin-top: 0;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+    box-shadow: 0 4px 12px rgba(127, 140, 141, 0.3);
+}
+
+/* Sección de enlace */
+.login-link-section {
     margin-top: 25px;
     padding-top: 20px;
     border-top: 1px solid #e0e0e0;
-}
-
-.register-link p {
-    color: #7f8c8d;
-    font-size: 0.95rem;
-}
-
-.register-link a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.register-link a:hover {
-    color: #2980b9;
-    text-decoration: underline;
+    text-align: center;
 }
 
 /* Alertas */
-.alert {
+.alert-error {
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
     font-size: 0.95rem;
+    background-color: #fee;
+    color: #c0392b;
+    border-left: 4px solid #e74c3c;
     animation: slideDown 0.3s ease;
 }
 
@@ -129,16 +125,8 @@
     }
 }
 
-.alert-error {
-    background-color: #fee;
-    color: #c0392b;
-    border-left: 4px solid #e74c3c;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border-left: 4px solid #27ae60;
+.alert-error p {
+    margin: 0;
 }
 
 /* Responsive */

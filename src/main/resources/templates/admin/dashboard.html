@@ -86,8 +86,8 @@
             </div>
             
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-            class="footer">
-        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados
+                <div class="stat-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                    <span>👤</span>
                 </div>
                 <div class="stat-content">
                     <h3>Usuarios</h3>
@@ -131,8 +131,8 @@
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>
