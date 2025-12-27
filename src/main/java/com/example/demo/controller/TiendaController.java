@@ -70,71 +70,34 @@ public class TiendaController {
             return "tienda/detalle";
         }
 
-        // Crear pedido
+        // Crear pedido PENDIENTE (sin confirmar)
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setLibro(libro);
         pedido.setTipo(tipo); // "PRESTAMO" o "COMPRA"
         pedido.setFechaPedido(LocalDateTime.now());
+        pedido.setEstado("PENDIENTE"); // Estado pendiente hasta que el admin confirme
         
         // Calcular precio según tipo
         double precio;
         if (tipo.equals("PRESTAMO")) {
-            precio = libro.getPrecioPrestamo(); // Precio de préstamo del libro
-            pedido.setEstado("ACTIVO");
+            precio = libro.getPrecioPrestamo();
         } else {
-            precio = libro.getPrecio(); // Precio completo para compra
-            pedido.setEstado("COMPLETADO");
+            precio = libro.getPrecio();
         }
         pedido.setPrecio(precio);
 
-        // Reducir stock
-        libro.setStock(libro.getStock() - 1);
-        libroRepository.save(libro);
-        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+        // Guardar el pedido pendiente
+        pedidoRepository.save(pedido);
+        
+        // Guardar el tipo de documento en sesión para este pedido
+        session.setAttribute("tipoDocumentoPedido_" + pedido.getId(), tipoDocumento);
 
-        // Registrar ingreso
-        Ingreso ingreso = new Ingreso();
-        ingreso.setPedido(pedidoGuardado);
-        ingreso.setMonto(precio);
-        ingreso.setTipo(tipo);
-        ingreso.setDescripcion(tipo.equals("PRESTAMO") ? 
-            "Préstamo de libro: " + libro.getTitulo() : 
-            "Compra de libro: " + libro.getTitulo());
-        ingreso.setFecha(LocalDateTime.now());
-        ingresoRepository.save(ingreso);
-
-        // Generar factura
-        Factura factura = new Factura();
-        factura.setPedido(pedidoGuardado);
-        factura.setTipoDocumento(tipoDocumento); // BOLETA o FACTURA
-        factura.setSubtotal(precio);
-        factura.setImpuesto(precio * 0.19); // 19% de IVA
-        factura.setTotal(precio + (precio * 0.19));
-        Factura facturaGuardada = facturaRepository.save(factura);
-
-        // Redirigir a la factura
-        return "redirect:/tienda/factura/" + facturaGuardada.getId();
+        model.addAttribute("mensaje", "Solicitud enviada. Diríjase al bibliotecario para confirmar su " + 
+                                      (tipo.equals("PRESTAMO") ? "préstamo" : "compra"));
+        model.addAttribute("libro", libro);
+        return "tienda/detalle";
     }
 
-    @GetMapping("/factura/{id}")
-    public String verFactura(@PathVariable Long id, Model model, HttpSession session) {
-        Cliente cliente = (Cliente) session.getAttribute("clienteLogueado");
-        if (cliente == null) {
-            return "redirect:/cliente/login";
-        }
-
-        Factura factura = facturaRepository.findById(id).orElse(null);
-        if (factura == null) {
-            return "redirect:/cliente/mis-pedidos";
-        }
-
-        // Verificar que la factura pertenece al cliente logueado
-        if (!factura.getPedido().getCliente().getId().equals(cliente.getId())) {
-            return "redirect:/cliente/mis-pedidos";
-        }
-
-        model.addAttribute("factura", factura);
-        return "tienda/factura";
-    }
+    // Eliminar el endpoint de factura de tienda (se moverá a admin)
 }

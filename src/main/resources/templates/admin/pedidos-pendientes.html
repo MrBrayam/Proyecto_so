@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos Pendientes - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <h2>Panel Admin</h2>
+            <nav>
+                <a th:href="@{/admin}">Dashboard</a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="active">Pedidos Pendientes</a>
+                <a th:href="@{/admin/libros}">Libros</a>
+                <a th:href="@{/admin/clientes}">Clientes</a>
+                <a th:href="@{/admin/usuarios}">Usuarios</a>
+                <a th:href="@{/admin/prestamos}">Préstamos</a>
+                <a th:href="@{/admin/ingresos}">Ingresos</a>
+                <a th:href="@{/admin/logout}">Cerrar Sesión</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <div class="header">
+                <h1>Pedidos Pendientes de Confirmación</h1>
+                <p style="color: #7f8c8d;">Cliente debe acercarse al bibliotecario para confirmar la compra/préstamo</p>
+            </div>
+
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Libro</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Doc. Solicitado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${pedidosPendientes.empty}">
+                            <td colspan="8" style="text-align: center;">No hay pedidos pendientes</td>
+                        </tr>
+                        <tr th:each="pedido : ${pedidosPendientes}">
+                            <td th:text="${pedido.id}">1</td>
+                            <td th:text="${#temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                            <td>
+                                <strong th:text="${pedido.cliente.nombre + ' ' + pedido.cliente.apellido}">Cliente</strong><br>
+                                <small th:text="${pedido.cliente.email}">email</small>
+                            </td>
+                            <td>
+                                <strong th:text="${pedido.libro.titulo}">Libro</strong><br>
+                                <small th:text="'Stock actual: ' + ${pedido.libro.stock}">Stock</small>
+                            </td>
+                            <td>
+                                <span class="badge" 
+                                      th:classappend="${pedido.tipo == 'PRESTAMO'} ? 'badge-prestamo' : 'badge-compra'"
+                                      th:text="${pedido.tipo}">COMPRA</span>
+                            </td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(pedido.precio, 1, 2)}">$0.00</td>
+                            <td>
+                                <span th:if="${session['tipoDocumentoPedido_' + pedido.id] != null}"
+                                      th:text="${session['tipoDocumentoPedido_' + pedido.id]}">BOLETA</span>
+                                <span th:unless="${session['tipoDocumentoPedido_' + pedido.id] != null}">
+                                    BOLETA
+                                </span>
+                            </td>
+                            <td>
+                                <form th:action="@{/admin/pedidos/{id}/confirmar(id=${pedido.id})}" method="post" style="display: inline;">
+                                    <!-- Tipo de documento -->
+                                    <select name="tipoDocumento" required style="margin-bottom: 5px;">
+                                        <option value="BOLETA" 
+                                                th:selected="${session['tipoDocumentoPedido_' + pedido.id] == 'BOLETA'}">
+                                            Boleta
+                                        </option>
+                                        <option value="FACTURA" 
+                                                th:selected="${session['tipoDocumentoPedido_' + pedido.id] == 'FACTURA'}"
+                                                th:disabled="${pedido.cliente.ruc == null || pedido.cliente.ruc == ''}">
+                                            Factura
+                                            <span th:if="${pedido.cliente.ruc == null || pedido.cliente.ruc == ''}">(Sin RUC)</span>
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="btn-small" 
+                                            th:disabled="${pedido.libro.stock <= 0}"
+                                            style="background-color: #27ae60;">
+                                        ✓ Confirmar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

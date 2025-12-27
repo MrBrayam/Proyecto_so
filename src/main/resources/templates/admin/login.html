@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>🔐 Acceso Administrador</h2>
+            
+            <div th:if="${error}" class="alert-error">
+                <p th:text="${error}">Error</p>
+            </div>
+            
+            <form th:action="@{/admin/login}" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-login">Iniciar Sesión</button>
+            </form>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <a th:href="@{/tienda}" class="btn">Volver a la Tienda</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

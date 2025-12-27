@@ -22,6 +22,11 @@
         
         <div class="stats-grid">
             <div class="stat-card">
+                <h3>Pedidos Pendientes</h3>
+                <p class="stat-number">📦</p>
+                <a th:href="@{/admin/pedidos-pendientes}" class="btn">Gestionar</a>
+            </div>
+            <div class="stat-card">
                 <h3>Libros</h3>
                 <p class="stat-number" th:text="${totalLibros}">0</p>
                 <a th:href="@{/admin/libros}" class="btn">Gestionar</a>

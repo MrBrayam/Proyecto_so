@@ -16,6 +16,10 @@ public class Factura {
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
     
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario; // Bibliotecario que generó la factura
+    
     @Column(name = "numero_factura", unique = true)
     private String numeroFactura;
     

@@ -21,6 +21,10 @@ public class Pedido {
     @JoinColumn(name = "libro_id", nullable = false)
     private Libro libro;
     
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario; // Bibliotecario que atendió
+    
     @Column(nullable = false)
     private String tipo; // "PRESTAMO" o "COMPRA"
     
@@ -30,7 +34,7 @@ public class Pedido {
     private LocalDateTime fechaDevolucion;
     
     @Column(nullable = false)
-    private String estado; // "ACTIVO", "DEVUELTO", "COMPLETADO"
+    private String estado; // "PENDIENTE", "ACTIVO", "DEVUELTO", "COMPLETADO"
     
     private Double precio;
 }

@@ -5,11 +5,14 @@ import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Usuario;
 import com.example.demo.entity.Pedido;
 import com.example.demo.entity.Ingreso;
+import com.example.demo.entity.Factura;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.repository.PedidoRepository;
 import com.example.demo.repository.IngresoRepository;
+import com.example.demo.repository.FacturaRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,8 +46,45 @@ public class AdminController {
     @Autowired
     private IngresoRepository ingresoRepository;
 
+    @Autowired
+    private FacturaRepository facturaRepository;
+
+    // Login de administrador
+    @GetMapping("/login")
+    public String mostrarLogin(HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") != null) {
+            return "redirect:/admin";
+        }
+        return "admin/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password,
+                       HttpSession session, Model model) {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        
+        if (usuario != null && usuario.getPassword() != null && usuario.getPassword().equals(password)) {
+            session.setAttribute("usuarioLogueado", usuario);
+            return "redirect:/admin";
+        } else {
+            model.addAttribute("error", "Email o contraseña incorrectos");
+            return "admin/login";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("usuarioLogueado");
+        return "redirect:/admin/login";
+    }
+
     @GetMapping
-    public String dashboard(Model model) {
+    public String dashboard(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+        
         model.addAttribute("totalLibros", libroRepository.count());
         model.addAttribute("totalClientes", clienteRepository.count());
         model.addAttribute("totalUsuarios", usuarioRepository.count());
@@ -202,7 +242,11 @@ public class AdminController {
 
     // Ingresos
     @GetMapping("/ingresos")
-    public String listarIngresos(Model model) {
+    public String listarIngresos(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
         model.addAttribute("ingresos", ingresoRepository.findAll());
         
         Double totalIngresos = ingresoRepository.calcularIngresoTotal();
@@ -214,5 +258,87 @@ public class AdminController {
         model.addAttribute("ingresosPrestamos", ingresosPrestamos != null ? ingresosPrestamos : 0.0);
         
         return "admin/ingresos";
+    }
+
+    // Pedidos Pendientes
+    @GetMapping("/pedidos-pendientes")
+    public String listarPedidosPendientes(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("pedidosPendientes", pedidoRepository.findByEstado("PENDIENTE"));
+        return "admin/pedidos-pendientes";
+    }
+
+    @PostMapping("/pedidos/{id}/confirmar")
+    public String confirmarPedido(@PathVariable Long id, @RequestParam String tipoDocumento,
+                                  HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+
+        Pedido pedido = pedidoRepository.findById(id).orElse(null);
+        if (pedido == null || !pedido.getEstado().equals("PENDIENTE")) {
+            return "redirect:/admin/pedidos-pendientes";
+        }
+
+        // Asignar usuario que atendió
+        pedido.setUsuario(usuario);
+        
+        // Cambiar estado según tipo
+        if (pedido.getTipo().equals("PRESTAMO")) {
+            pedido.setEstado("ACTIVO");
+        } else {
+            pedido.setEstado("COMPLETADO");
+        }
+
+        // Reducir stock
+        Libro libro = pedido.getLibro();
+        libro.setStock(libro.getStock() - 1);
+        libroRepository.save(libro);
+        pedidoRepository.save(pedido);
+
+        // Registrar ingreso
+        Ingreso ingreso = new Ingreso();
+        ingreso.setPedido(pedido);
+        ingreso.setMonto(pedido.getPrecio());
+        ingreso.setTipo(pedido.getTipo());
+        ingreso.setDescripcion(pedido.getTipo().equals("PRESTAMO") ? 
+            "Préstamo de libro: " + libro.getTitulo() : 
+            "Compra de libro: " + libro.getTitulo());
+        ingreso.setFecha(LocalDateTime.now());
+        ingresoRepository.save(ingreso);
+
+        // Generar factura/boleta
+        Factura factura = new Factura();
+        factura.setPedido(pedido);
+        factura.setUsuario(usuario);
+        factura.setTipoDocumento(tipoDocumento);
+        factura.setSubtotal(pedido.getPrecio());
+        factura.setImpuesto(pedido.getPrecio() * 0.19);
+        factura.setTotal(pedido.getPrecio() + (pedido.getPrecio() * 0.19));
+        Factura facturaGuardada = facturaRepository.save(factura);
+
+        // Redirigir a la factura
+        return "redirect:/admin/factura/" + facturaGuardada.getId();
+    }
+
+    @GetMapping("/factura/{id}")
+    public String verFactura(@PathVariable Long id, Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "redirect:/admin/login";
+        }
+
+        Factura factura = facturaRepository.findById(id).orElse(null);
+        if (factura == null) {
+            return "redirect:/admin/pedidos-pendientes";
+        }
+
+        model.addAttribute("factura", factura);
+        return "admin/factura";
     }
 }
