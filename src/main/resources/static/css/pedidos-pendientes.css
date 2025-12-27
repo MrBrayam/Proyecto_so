@@ -1,0 +1,167 @@
+/* ============================================
+   PEDIDOS PENDIENTES - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Información del usuario logueado */
+.user-info-text {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #e8f4f8 0%, #d6eaf8 100%);
+    border-left: 4px solid var(--admin-primary);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.user-info-text strong {
+    color: var(--admin-dark);
+}
+
+/* Selector de tipo de documento en tabla */
+.admin-table select {
+    padding: 8px 12px;
+    border: 2px solid var(--admin-gray-lighter);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: var(--admin-white);
+    color: var(--admin-dark);
+    cursor: pointer;
+    transition: var(--admin-transition);
+    margin-bottom: 8px;
+    width: 100%;
+    max-width: 150px;
+}
+
+.admin-table select:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.admin-table select:disabled {
+    background-color: var(--admin-gray-lighter);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Formulario inline en tabla */
+.admin-table form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* Información del cliente y libro */
+.admin-table td strong {
+    color: var(--admin-dark);
+    font-weight: 600;
+    display: block;
+}
+
+.admin-table td small {
+    color: var(--admin-gray);
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Botón confirmar en tabla */
+.admin-table .btn-small[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--admin-gray-light);
+}
+
+/* Mensaje de sin RUC */
+.sin-ruc-msg {
+    font-size: 0.8rem;
+    color: var(--admin-danger);
+    font-style: italic;
+}
+
+/* Estado de stock bajo */
+.stock-bajo {
+    color: var(--admin-danger);
+    font-weight: 600;
+}
+
+.stock-normal {
+    color: var(--admin-success);
+    font-weight: 600;
+}
+
+/* Responsive para pedidos pendientes */
+@media (max-width: 992px) {
+    .admin-table select {
+        max-width: 100%;
+    }
+    
+    .admin-table form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Convertir tabla en tarjetas en móviles */
+    .table-container {
+        overflow-x: visible;
+    }
+    
+    .admin-table {
+        display: block;
+    }
+    
+    .admin-table thead {
+        display: none;
+    }
+    
+    .admin-table tbody {
+        display: block;
+    }
+    
+    .admin-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        background: white;
+        border: 1px solid var(--admin-gray-lighter);
+        border-radius: var(--admin-radius);
+        padding: 15px;
+        box-shadow: var(--admin-shadow);
+    }
+    
+    .admin-table tbody td {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+        text-align: left;
+    }
+    
+    .admin-table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 15px;
+    }
+    
+    .admin-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .admin-table select {
+        max-width: 100%;
+    }
+    
+    .admin-table form {
+        width: 100%;
+    }
+    
+    .admin-table .btn-small {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+    }
+}

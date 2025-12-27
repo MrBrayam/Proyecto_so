@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos Pendientes - Admin</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/pedidos-pendientes.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
-                <li><a th:href="@{/admin/logout}" style="color: #e74c3c;">Cerrar Sesión</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
+                <li><a th:href="@{/admin/logout}" class="nav-link btn-danger">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
     
     <div class="admin-container">
         <main class="content">
-            <div class="header">
-                <h1>Pedidos Pendientes de Confirmación</h1>
-                <p style="color: #7f8c8d;">
-                    Usuario: <strong th:text="${usuario.username}">admin</strong> 
-                    (<span th:text="${usuario.rol}">ADMIN</span>)
-                </p>
-                <p style="color: #7f8c8d;">Cliente debe acercarse al bibliotecario para confirmar la compra/préstamo</p>
+            <div class="user-info-text">
+                Usuario: <strong th:text="${usuario.username}">admin</strong> 
+                (<span th:text="${usuario.rol}">ADMIN</span>)
             </div>
+            
+            <h2 class="page-title">Pedidos Pendientes de Confirmación</h2>
+            <p class="info-message">Cliente debe acercarse al bibliotecario para confirmar la compra/préstamo</p>
 
             <div class="table-container">
                 <table class="admin-table">
@@ -82,9 +82,8 @@
                                             <span th:if="${pedido.cliente.ruc == null || pedido.cliente.ruc == ''}">(Sin RUC)</span>
                                         </option>
                                     </select>
-                                    <button type="submit" class="btn-small" 
-                                            th:disabled="${pedido.libro.stock <= 0}"
-                                            style="background-color: #27ae60;">
+                                    <button type="submit" class="btn btn-small btn-success" 
+                                            th:disabled="${pedido.libro.stock <= 0}">
                                         ✓ Confirmar
                                     </button>
                                 </form>
@@ -96,8 +95,8 @@
         </main>
     </div>
     
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

@@ -8,12 +8,12 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link active">Dashboard</a></li>
             </ul>
         </nav>
     </header>
@@ -33,55 +33,100 @@
                 </div>
             </div>
             <div>
-                <a th:href="@{/admin/logout}" class="btn btn-delete" style="background: #e74c3c;"> Cerrar Sesión</a>
+                <a th:href="@{/admin/logout}" class="btn btn-danger">Cerrar Sesión</a>
             </div>
         </div>
         
-        <h2>Dashboard</h2>
+        <h2 class="page-title">Dashboard</h2>
         
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Pedidos Pendientes</h3>
-                <p class="stat-number"></p>
-                <a th:href="@{/admin/pedidos-pendientes}" class="btn">Gestionar</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                    <span>📦</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Pedidos Pendientes</h3>
+                    <p class="stat-number">-</p>
+                </div>
+                <a th:href="@{/admin/pedidos-pendientes}" class="btn btn-primary">Gestionar</a>
             </div>
             
             <div class="stat-card">
-                <h3>Préstamos</h3>
-                <p class="stat-number"></p>
-                <a th:href="@{/admin/prestamos}" class="btn">Gestionar</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                    <span>📚</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Préstamos</h3>
+                    <p class="stat-number">-</p>
+                </div>
+                <a th:href="@{/admin/prestamos}" class="btn btn-primary">Gestionar</a>
             </div>
             
             <!-- Solo mostrar para ADMIN -->
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Libros</h3>
-                <p class="stat-number" th:text="${totalLibros}">0</p>
-                <a th:href="@{/admin/libros}" class="btn">Gestionar</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #27ae60, #229954);">
+                    <span>📖</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Libros</h3>
+                    <p class="stat-number" th:text="${totalLibros}">0</p>
+                </div>
+                <a th:href="@{/admin/libros}" class="btn btn-primary">Gestionar</a>
             </div>
+            
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Clientes</h3>
-                <p class="stat-number" th:text="${totalClientes}">0</p>
-                <a th:href="@{/admin/clientes}" class="btn">Gestionar</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                    <span>👥</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Clientes</h3>
+                    <p class="stat-number" th:text="${totalClientes}">0</p>
+                </div>
+                <a th:href="@{/admin/clientes}" class="btn btn-primary">Gestionar</a>
             </div>
+            
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Usuarios</h3>
-                <p class="stat-number" th:text="${totalUsuarios}">0</p>
-                <a th:href="@{/admin/usuarios}" class="btn">Gestionar</a>
+            class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados
+                </div>
+                <div class="stat-content">
+                    <h3>Usuarios</h3>
+                    <p class="stat-number" th:text="${totalUsuarios}">0</p>
+                </div>
+                <a th:href="@{/admin/usuarios}" class="btn btn-primary">Gestionar</a>
             </div>
+            
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Finanzas</h3>
-                <p class="stat-number"></p>
-                <a th:href="@{/admin/finanzas}" class="btn">Ver Reporte</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #16a085, #1abc9c);">
+                    <span>💰</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Finanzas</h3>
+                    <p class="stat-number">-</p>
+                </div>
+                <a th:href="@{/admin/finanzas}" class="btn btn-primary">Ver Reporte</a>
             </div>
+            
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Proveedores</h3>
-                <p class="stat-number"></p>
-                <a th:href="@{/admin/proveedores}" class="btn">Gestionar</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
+                    <span>🏢</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Proveedores</h3>
+                    <p class="stat-number">-</p>
+                </div>
+                <a th:href="@{/admin/proveedores}" class="btn btn-primary">Gestionar</a>
             </div>
+            
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
-                <h3>Compras</h3>
-                <p class="stat-number"></p>
-                <a th:href="@{/admin/compras}" class="btn">Ver Compras</a>
+                <div class="stat-icon" style="background: linear-gradient(135deg, #d35400, #e67e22);">
+                    <span>🛒</span>
+                </div>
+                <div class="stat-content">
+                    <h3>Compras</h3>
+                    <p class="stat-number">-</p>
+                </div>
+                <a th:href="@{/admin/compras}" class="btn btn-primary">Ver Compras</a>
             </div>
         </div>
     </main>

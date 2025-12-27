@@ -5,31 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Préstamos</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/prestamos.css}">
 </head>
 <body>
-    <header>
-        <nav>
+    <header class="header">
+        <nav class="nav">
             <h1>Panel de Administración</h1>
-            <ul>
-                <li><a th:href="@{/tienda}">Ver Tienda</a></li>
-                <li><a th:href="@{/admin}">Dashboard</a></li>
-                <li><a th:href="@{/admin/logout}" style="color: #e74c3c;">Cerrar Sesión</a></li>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
+                <li><a th:href="@{/admin/logout}" class="nav-link btn-danger">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="admin-container">
-        <h2>Gestión de Préstamos Activos</h2>
-        <p style="color: #7f8c8d; margin-bottom: 20px;">
+        <div class="user-info-header">
             Usuario: <strong th:text="${usuario.username}">admin</strong> 
             (<span th:text="${usuario.rol}">ADMIN</span>)
-        </p>
+        </div>
+        
+        <h2 class="page-title">Gestión de Préstamos Activos</h2>
         
         <div th:if="${prestamos.isEmpty()}" class="empty-message">
             <p>No hay préstamos activos en este momento.</p>
         </div>
         
-        <table class="admin-table" th:if="${!prestamos.isEmpty()}">
+        <div class="table-container">
+            <table class="admin-table" th:if="${!prestamos.isEmpty()}">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -50,17 +53,20 @@
                     <td th:text="${#temporals.format(prestamo.fechaPedido, 'dd/MM/yyyy HH:mm')}">Fecha</td>
                     <td th:text="'$' + ${prestamo.precio}">Precio</td>
                     <td>
-                        <form th:action="@{/admin/prestamos/devolver/{id}(id=${prestamo.id})}" method="post" style="display: inline;">
-                            <button type="submit" class="btn-small btn-success" onclick="return confirm('¿Confirmar devolución del libro?')">Marcar como Devuelto</button>
+                        <form th:action="@{/admin/prestamos/devolver/{id}(id=${prestamo.id})}" method="post">
+                            <button type="submit" class="btn btn-small btn-success" onclick="return confirm('¿Confirmar devolución del libro?')">
+                                ✓ Marcar como Devuelto
+                            </button>
                         </form>
                     </td>
                 </tr>
             </tbody>
         </table>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Panel de Administración</p>
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

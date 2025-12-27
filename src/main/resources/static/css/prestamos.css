@@ -1,0 +1,176 @@
+/* ============================================
+   PRÉSTAMOS ACTIVOS - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Información del usuario */
+.user-info-header {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-left: 4px solid var(--admin-warning);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.user-info-header strong {
+    color: var(--admin-dark);
+}
+
+/* Destacado para préstamos */
+.prestamo-card {
+    background: var(--admin-white);
+    border-radius: var(--admin-radius);
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--admin-shadow);
+    border-left: 5px solid var(--admin-warning);
+    transition: var(--admin-transition);
+}
+
+.prestamo-card:hover {
+    box-shadow: var(--admin-shadow-hover);
+    transform: translateX(5px);
+}
+
+.prestamo-card h3 {
+    color: var(--admin-dark);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.prestamo-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item label {
+    font-size: 0.85rem;
+    color: var(--admin-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.info-item span {
+    font-size: 1rem;
+    color: var(--admin-dark);
+    font-weight: 500;
+}
+
+/* Botón de devolver */
+.btn-devolver {
+    background: linear-gradient(135deg, var(--admin-success) 0%, var(--admin-success-dark) 100%);
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+    border-radius: var(--admin-radius);
+    transition: var(--admin-transition);
+}
+
+.btn-devolver:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+/* Estilo para formulario de devolución */
+.admin-table .btn-success {
+    background: linear-gradient(135deg, var(--admin-success) 0%, var(--admin-success-dark) 100%);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--admin-transition);
+}
+
+.admin-table .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* Indicador de tiempo de préstamo */
+.tiempo-prestamo {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #fff3e0;
+    color: #e67e22;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Información del cliente destacada */
+.cliente-info {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin: 5px 0;
+}
+
+.cliente-info strong {
+    color: var(--admin-dark);
+}
+
+/* Responsive para préstamos */
+@media (max-width: 768px) {
+    .prestamo-info {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Convertir tabla en tarjetas */
+    .admin-table {
+        display: block;
+    }
+    
+    .admin-table thead {
+        display: none;
+    }
+    
+    .admin-table tbody {
+        display: block;
+    }
+    
+    .admin-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        background: white;
+        border: 1px solid var(--admin-gray-lighter);
+        border-left: 5px solid var(--admin-warning);
+        border-radius: var(--admin-radius);
+        padding: 20px;
+        box-shadow: var(--admin-shadow);
+    }
+    
+    .admin-table tbody td {
+        display: block;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+        text-align: left;
+    }
+    
+    .admin-table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 20px;
+    }
+    
+    .admin-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .admin-table .btn-success {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.05rem;
+    }
+}
