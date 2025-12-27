@@ -12,7 +12,6 @@
             <h1>Librería Online</h1>
             <ul>
                 <li><a th:href="@{/tienda}">Tienda</a></li>
-                <li><a th:href="@{/admin}">Administración</a></li>
                 <li th:if="${session.clienteLogueado != null}" class="user-menu">
                     <span class="user-name" th:text="${session.clienteLogueado.nombre}">Usuario</span>
                     <div class="dropdown">

@@ -92,7 +92,7 @@
                 </div>
             </div>
             <div>
-                <a th:href="@{/admin/logout}" class="btn btn-delete" style="background: #e74c3c;">🚪 Cerrar Sesión</a>
+                <a th:href="@{/admin/logout}" class="btn btn-delete" style="background: #e74c3c;"> Cerrar Sesión</a>
             </div>
         </div>
         
@@ -101,13 +101,13 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Pedidos Pendientes</h3>
-                <p class="stat-number">📦</p>
+                <p class="stat-number"></p>
                 <a th:href="@{/admin/pedidos-pendientes}" class="btn">Gestionar</a>
             </div>
             
             <div class="stat-card">
                 <h3>Préstamos</h3>
-                <p class="stat-number">📚</p>
+                <p class="stat-number"></p>
                 <a th:href="@{/admin/prestamos}" class="btn">Gestionar</a>
             </div>
             
@@ -129,17 +129,17 @@
             </div>
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Finanzas</h3>
-                <p class="stat-number">💰</p>
+                <p class="stat-number"></p>
                 <a th:href="@{/admin/finanzas}" class="btn">Ver Reporte</a>
             </div>
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Proveedores</h3>
-                <p class="stat-number">🏢</p>
+                <p class="stat-number"></p>
                 <a th:href="@{/admin/proveedores}" class="btn">Gestionar</a>
             </div>
             <div class="stat-card" th:if="${usuario.rol == 'ADMIN'}">
                 <h3>Compras</h3>
-                <p class="stat-number">🛒</p>
+                <p class="stat-number"></p>
                 <a th:href="@{/admin/compras}" class="btn">Ver Compras</a>
             </div>
         </div>

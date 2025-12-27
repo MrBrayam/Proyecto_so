@@ -143,7 +143,7 @@
 <body>
     <div class="factura-container">
         <div class="factura-header">
-            <h1>📄 FACTURA DE COMPRA</h1>
+            <h1>FACTURA DE COMPRA</h1>
             <p class="factura-numero" th:text="'N° ' + ${compra.numeroFactura}">N° COMP-000001</p>
             <p class="factura-numero" th:text="'Fecha: ' + ${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">Fecha: 01/01/2024</p>
         </div>
@@ -230,7 +230,7 @@
         </div>
         
         <div class="acciones-factura">
-            <button onclick="imprimirFactura()" class="btn btn-imprimir">🖨️ Imprimir</button>
+            <button onclick="imprimirFactura()" class="btn btn-imprimir">Imprimir</button>
             <a th:href="@{/admin/compras}" class="btn btn-secondary">← Volver a Compras</a>
         </div>
     </div>
