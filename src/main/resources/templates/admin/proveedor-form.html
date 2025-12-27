@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${proveedor.id != null ? 'Editar Proveedor' : 'Nuevo Proveedor'}">Proveedor</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>📚 Admin Panel</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/admin}" class="menu-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a th:href="@{/admin/libros}" class="menu-item">
+                    <span>📖</span> Libros
+                </a>
+                <a th:href="@{/admin/clientes}" class="menu-item">
+                    <span>👥</span> Clientes
+                </a>
+                <a th:href="@{/admin/usuarios}" class="menu-item">
+                    <span>👤</span> Usuarios
+                </a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
+                    <span>⏳</span> Pedidos Pendientes
+                </a>
+                <a th:href="@{/admin/prestamos}" class="menu-item">
+                    <span>📚</span> Préstamos
+                </a>
+                <a th:href="@{/admin/ingresos}" class="menu-item">
+                    <span>💰</span> Ingresos
+                </a>
+                <a th:href="@{/admin/proveedores}" class="menu-item active">
+                    <span>🏢</span> Proveedores
+                </a>
+                <a th:href="@{/admin/compras}" class="menu-item">
+                    <span>🛒</span> Compras
+                </a>
+                <a th:href="@{/admin/logout}" class="menu-item logout">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1 th:text="${proveedor.id != null ? 'Editar Proveedor' : 'Nuevo Proveedor'}">Proveedor</h1>
+                <a th:href="@{/admin/proveedores}" class="btn btn-secondary">← Volver</a>
+            </header>
+
+            <div class="content-body">
+                <form th:action="@{/admin/proveedores/guardar}" th:object="${proveedor}" method="post" class="form">
+                    <input type="hidden" th:field="*{id}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre *</label>
+                            <input type="text" id="nombre" th:field="*{nombre}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ruc">RUC *</label>
+                            <input type="text" id="ruc" th:field="*{ruc}" pattern="[0-9]{11}" title="Debe tener 11 dígitos" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" th:field="*{email}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="text" id="telefono" th:field="*{telefono}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" th:field="*{direccion}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nombreContacto">Nombre de Contacto</label>
+                            <input type="text" id="nombreContacto" th:field="*{nombreContacto}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a th:href="@{/admin/proveedores}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

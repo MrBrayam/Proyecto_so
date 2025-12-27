@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>📚 Admin Panel</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/admin}" class="menu-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a th:href="@{/admin/libros}" class="menu-item">
+                    <span>📖</span> Libros
+                </a>
+                <a th:href="@{/admin/clientes}" class="menu-item">
+                    <span>👥</span> Clientes
+                </a>
+                <a th:href="@{/admin/usuarios}" class="menu-item">
+                    <span>👤</span> Usuarios
+                </a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
+                    <span>⏳</span> Pedidos Pendientes
+                </a>
+                <a th:href="@{/admin/prestamos}" class="menu-item">
+                    <span>📚</span> Préstamos
+                </a>
+                <a th:href="@{/admin/ingresos}" class="menu-item">
+                    <span>💰</span> Ingresos
+                </a>
+                <a th:href="@{/admin/proveedores}" class="menu-item active">
+                    <span>🏢</span> Proveedores
+                </a>
+                <a th:href="@{/admin/compras}" class="menu-item">
+                    <span>🛒</span> Compras
+                </a>
+                <a th:href="@{/admin/logout}" class="menu-item logout">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Gestión de Proveedores</h1>
+                <a th:href="@{/admin/proveedores/nuevo}" class="btn btn-primary">+ Nuevo Proveedor</a>
+            </header>
+
+            <div class="content-body">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>RUC</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Contacto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="proveedor : ${proveedores}">
+                            <td th:text="${proveedor.id}">1</td>
+                            <td th:text="${proveedor.nombre}">Proveedor</td>
+                            <td th:text="${proveedor.ruc}">20123456789</td>
+                            <td th:text="${proveedor.email}">email@example.com</td>
+                            <td th:text="${proveedor.telefono}">999999999</td>
+                            <td th:text="${proveedor.nombreContacto}">Contacto</td>
+                            <td>
+                                <a th:href="@{/admin/proveedores/editar/{id}(id=${proveedor.id})}" class="btn btn-edit">Editar</a>
+                                <a th:href="@{/admin/proveedores/eliminar/{id}(id=${proveedor.id})}" 
+                                   class="btn btn-delete" 
+                                   onclick="return confirm('¿Estás seguro de eliminar este proveedor?')">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -3,12 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.entity.Cliente;
 import com.example.demo.entity.Libro;
 import com.example.demo.entity.Pedido;
-import com.example.demo.entity.Ingreso;
-import com.example.demo.entity.Factura;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.PedidoRepository;
-import com.example.demo.repository.IngresoRepository;
-import com.example.demo.repository.FacturaRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,12 +22,6 @@ public class TiendaController {
 
     @Autowired
     private PedidoRepository pedidoRepository;
-
-    @Autowired
-    private IngresoRepository ingresoRepository;
-
-    @Autowired
-    private FacturaRepository facturaRepository;
 
     @GetMapping
     public String index(Model model) {
@@ -87,5 +77,4 @@ public class TiendaController {
         return "redirect:/cliente/mis-pedidos";
     }
 
-    // Eliminar el endpoint de factura de tienda (se moverá a admin)
 }

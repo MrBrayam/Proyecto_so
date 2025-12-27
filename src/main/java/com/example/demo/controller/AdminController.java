@@ -6,12 +6,18 @@ import com.example.demo.entity.Usuario;
 import com.example.demo.entity.Pedido;
 import com.example.demo.entity.Ingreso;
 import com.example.demo.entity.Factura;
+import com.example.demo.entity.Proveedor;
+import com.example.demo.entity.Compra;
+import com.example.demo.entity.DetalleCompra;
 import com.example.demo.repository.LibroRepository;
 import com.example.demo.repository.ClienteRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.repository.PedidoRepository;
 import com.example.demo.repository.IngresoRepository;
 import com.example.demo.repository.FacturaRepository;
+import com.example.demo.repository.ProveedorRepository;
+import com.example.demo.repository.CompraRepository;
+import com.example.demo.repository.DetalleCompraRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +55,15 @@ public class AdminController {
 
     @Autowired
     private FacturaRepository facturaRepository;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    @Autowired
+    private CompraRepository compraRepository;
+
+    @Autowired
+    private DetalleCompraRepository detalleCompraRepository;
 
     // Login de administrador
     @GetMapping("/login")
@@ -400,4 +415,214 @@ public class AdminController {
         // Formatear con prefijo FAC- y 9 dígitos: FAC-000000001
         return "FAC-" + String.format("%09d", numeroCorrelativo);
     }
+    
+    // Proveedores
+    @GetMapping("/proveedores")
+    public String listarProveedores(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("proveedores", proveedorRepository.findAll());
+        return "admin/proveedores";
+    }
+
+    @GetMapping("/proveedores/nuevo")
+    public String nuevoProveedor(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("proveedor", new Proveedor());
+        return "admin/proveedor-form";
+    }
+
+    @PostMapping("/proveedores/guardar")
+    public String guardarProveedor(@ModelAttribute Proveedor proveedor, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        proveedorRepository.save(proveedor);
+        return "redirect:/admin/proveedores";
+    }
+
+    @GetMapping("/proveedores/editar/{id}")
+    public String editarProveedor(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        Proveedor proveedor = proveedorRepository.findById(id).orElse(null);
+        model.addAttribute("proveedor", proveedor);
+        return "admin/proveedor-form";
+    }
+
+    @GetMapping("/proveedores/eliminar/{id}")
+    public String eliminarProveedor(@PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        proveedorRepository.deleteById(id);
+        return "redirect:/admin/proveedores";
+    }
+    
+    // Compras
+    @GetMapping("/compras")
+    public String listarCompras(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("compras", compraRepository.findAll());
+        return "admin/compras";
+    }
+
+    @GetMapping("/compras/nueva")
+    public String nuevaCompra(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        model.addAttribute("compra", new Compra());
+        model.addAttribute("proveedores", proveedorRepository.findAll());
+        model.addAttribute("libros", libroRepository.findAll());
+        return "admin/compra-form";
+    }
+
+    @GetMapping("/compras/ver/{id}")
+    public String verCompra(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/admin/login";
+        }
+        
+        Compra compra = compraRepository.findById(id).orElse(null);
+        if (compra == null) {
+            return "redirect:/admin/compras";
+        }
+        
+        // Cargar relaciones
+        if (compra.getProveedor() != null) {
+            compra.getProveedor().getNombre();
+        }
+        if (compra.getUsuario() != null) {
+            compra.getUsuario().getUsername();
+        }
+        
+        model.addAttribute("compra", compra);
+        model.addAttribute("detalles", detalleCompraRepository.findByCompra(compra));
+        return "admin/compra-detalle";
+    }
+
+    @PostMapping("/compras/guardar")
+    @ResponseBody
+    public String guardarCompra(@RequestBody CompraRequest request, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return "Error: No autorizado";
+        }
+
+        try {
+            // Crear compra
+            Compra compra = new Compra();
+            compra.setProveedor(proveedorRepository.findById(request.getProveedorId()).orElse(null));
+            compra.setUsuario(usuario);
+            compra.setObservaciones(request.getObservaciones());
+            compra.setSubtotal(request.getSubtotal());
+            compra.setImpuesto(request.getImpuesto());
+            compra.setTotal(request.getTotal());
+            compra.setNumeroFactura(generarNumeroCompra());
+            
+            Compra compraGuardada = compraRepository.save(compra);
+
+            // Crear detalles y actualizar stock
+            for (CompraDetalleRequest detalle : request.getDetalles()) {
+                DetalleCompra detalleCompra = new DetalleCompra();
+                detalleCompra.setCompra(compraGuardada);
+                
+                Libro libro = libroRepository.findById(detalle.getLibroId()).orElse(null);
+                if (libro != null) {
+                    detalleCompra.setLibro(libro);
+                    detalleCompra.setCantidad(detalle.getCantidad());
+                    detalleCompra.setPrecioUnitario(detalle.getPrecioUnitario());
+                    
+                    detalleCompraRepository.save(detalleCompra);
+                    
+                    // Actualizar stock del libro
+                    libro.setStock(libro.getStock() + detalle.getCantidad());
+                    libroRepository.save(libro);
+                }
+            }
+
+            return "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    private String generarNumeroCompra() {
+        Optional<Compra> ultimaCompra = compraRepository.findFirstByOrderByIdDesc();
+        long numeroCorrelativo = 1;
+        
+        if (ultimaCompra.isPresent() && ultimaCompra.get().getNumeroFactura() != null) {
+            String ultimoNumero = ultimaCompra.get().getNumeroFactura();
+            try {
+                if (ultimoNumero.startsWith("COMP-")) {
+                    numeroCorrelativo = Long.parseLong(ultimoNumero.substring(5)) + 1;
+                } else {
+                    numeroCorrelativo = Long.parseLong(ultimoNumero) + 1;
+                }
+            } catch (NumberFormatException e) {
+                numeroCorrelativo = 1;
+            }
+        }
+        
+        return "COMP-" + String.format("%09d", numeroCorrelativo);
+    }
+
+    // Clases auxiliares para recibir datos JSON
+    static class CompraRequest {
+        private Long proveedorId;
+        private String observaciones;
+        private Double subtotal;
+        private Double impuesto;
+        private Double total;
+        private java.util.List<CompraDetalleRequest> detalles;
+
+        public Long getProveedorId() { return proveedorId; }
+        public void setProveedorId(Long proveedorId) { this.proveedorId = proveedorId; }
+        
+        public String getObservaciones() { return observaciones; }
+        public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+        
+        public Double getSubtotal() { return subtotal; }
+        public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
+        
+        public Double getImpuesto() { return impuesto; }
+        public void setImpuesto(Double impuesto) { this.impuesto = impuesto; }
+        
+        public Double getTotal() { return total; }
+        public void setTotal(Double total) { this.total = total; }
+        
+        public java.util.List<CompraDetalleRequest> getDetalles() { return detalles; }
+        public void setDetalles(java.util.List<CompraDetalleRequest> detalles) { this.detalles = detalles; }
+    }
+
+    static class CompraDetalleRequest {
+        private Long libroId;
+        private Integer cantidad;
+        private Double precioUnitario;
+
+        public Long getLibroId() { return libroId; }
+        public void setLibroId(Long libroId) { this.libroId = libroId; }
+        
+        public Integer getCantidad() { return cantidad; }
+        public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+        
+        public Double getPrecioUnitario() { return precioUnitario; }
+        public void setPrecioUnitario(Double precioUnitario) { this.precioUnitario = precioUnitario; }
+    }
 }
+

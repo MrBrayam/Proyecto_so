@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>📚 Admin Panel</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/admin}" class="menu-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a th:href="@{/admin/libros}" class="menu-item">
+                    <span>📖</span> Libros
+                </a>
+                <a th:href="@{/admin/clientes}" class="menu-item">
+                    <span>👥</span> Clientes
+                </a>
+                <a th:href="@{/admin/usuarios}" class="menu-item">
+                    <span>👤</span> Usuarios
+                </a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
+                    <span>⏳</span> Pedidos Pendientes
+                </a>
+                <a th:href="@{/admin/prestamos}" class="menu-item">
+                    <span>📚</span> Préstamos
+                </a>
+                <a th:href="@{/admin/ingresos}" class="menu-item">
+                    <span>💰</span> Ingresos
+                </a>
+                <a th:href="@{/admin/proveedores}" class="menu-item">
+                    <span>🏢</span> Proveedores
+                </a>
+                <a th:href="@{/admin/compras}" class="menu-item active">
+                    <span>🛒</span> Compras
+                </a>
+                <a th:href="@{/admin/logout}" class="menu-item logout">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Registro de Compras</h1>
+                <a th:href="@{/admin/compras/nueva}" class="btn btn-primary">+ Nueva Compra</a>
+            </header>
+
+            <div class="content-body">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>N° Factura</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Subtotal</th>
+                            <th>IVA</th>
+                            <th>Total</th>
+                            <th>Usuario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="compra : ${compras}">
+                            <td th:text="${compra.numeroFactura}">COMP-001</td>
+                            <td th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                            <td th:text="${compra.proveedor.nombre}">Proveedor</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(compra.subtotal, 1, 2)}">$0.00</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(compra.impuesto, 1, 2)}">$0.00</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</td>
+                            <td th:text="${compra.usuario != null ? compra.usuario.username : 'N/A'}">Usuario</td>
+                            <td>
+                                <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn btn-info">Ver</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

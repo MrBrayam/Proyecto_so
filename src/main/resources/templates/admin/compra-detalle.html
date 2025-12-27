@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura de Compra</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .factura-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .factura-header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .factura-header h1 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .factura-numero {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .factura-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .info-section h3 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section p {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .info-section strong {
+            color: #2c3e50;
+        }
+        
+        .factura-detalle {
+            margin: 30px 0;
+        }
+        
+        .factura-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .factura-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .factura-table th,
+        .factura-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .factura-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .factura-totales {
+            text-align: right;
+            margin-top: 20px;
+        }
+        
+        .factura-totales p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .factura-totales .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            border-top: 2px solid #34495e;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+        
+        .factura-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+        }
+        
+        .acciones-factura {
+            margin-top: 30px;
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn-imprimir {
+            background-color: #3498db;
+            padding: 12px 30px;
+        }
+        
+        .btn-imprimir:hover {
+            background-color: #2980b9;
+        }
+        
+        @media print {
+            .acciones-factura {
+                display: none;
+            }
+            .factura-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+    <script>
+        function imprimirFactura() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <div class="factura-container">
+        <div class="factura-header">
+            <h1>📄 FACTURA DE COMPRA</h1>
+            <p class="factura-numero" th:text="'N° ' + ${compra.numeroFactura}">N° COMP-000001</p>
+            <p class="factura-numero" th:text="'Fecha: ' + ${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">Fecha: 01/01/2024</p>
+        </div>
+        
+        <div class="factura-info">
+            <div class="info-section">
+                <h3>Datos del Proveedor</h3>
+                <p><strong>Nombre:</strong> <span th:text="${compra.proveedor.nombre}">Proveedor</span></p>
+                <p><strong>RUC:</strong> <span th:text="${compra.proveedor.ruc}">20123456789</span></p>
+                <p><strong>Email:</strong> <span th:text="${compra.proveedor.email}">email@example.com</span></p>
+                <p><strong>Teléfono:</strong> <span th:text="${compra.proveedor.telefono}">-</span></p>
+                <p th:if="${compra.proveedor.direccion != null}">
+                    <strong>Dirección:</strong> <span th:text="${compra.proveedor.direccion}">-</span>
+                </p>
+                <p th:if="${compra.proveedor.nombreContacto != null}">
+                    <strong>Contacto:</strong> <span th:text="${compra.proveedor.nombreContacto}">-</span>
+                </p>
+            </div>
+            
+            <div class="info-section">
+                <h3>Datos de la Librería</h3>
+                <p><strong>Nombre:</strong> Librería Online</p>
+                <p><strong>RUC:</strong> 20123456789</p>
+                <p><strong>Dirección:</strong> Av. Principal 123</p>
+                <p><strong>Teléfono:</strong> (01) 234-5678</p>
+            </div>
+            
+            <div class="info-section" style="grid-column: 1 / -1; margin-top: 20px;">
+                <h3>Registrado por</h3>
+                <p><strong>Usuario:</strong> <span th:text="${compra.usuario != null ? compra.usuario.username : 'N/A'}">Usuario</span></p>
+                <p th:if="${compra.usuario != null}"><strong>Email:</strong> <span th:text="${compra.usuario.email}">email</span></p>
+            </div>
+        </div>
+        
+        <div class="factura-detalle">
+            <h3>Detalle de la Compra</h3>
+            <table class="factura-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="detalle : ${detalles}">
+                        <td>
+                            <strong th:text="${detalle.libro.titulo}">Título del Libro</strong><br>
+                            <small th:text="'Autor: ' + ${detalle.libro.autor}">Autor</small><br>
+                            <small th:text="'ISBN: ' + ${detalle.libro.isbn}">ISBN</small>
+                        </td>
+                        <td th:text="${detalle.cantidad}">1</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}">$0.00</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}">$0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="factura-totales">
+            <p>
+                <strong>Subtotal:</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(compra.subtotal, 1, 2)}">$0.00</span>
+            </p>
+            <p>
+                <strong>IVA (19%):</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(compra.impuesto, 1, 2)}">$0.00</span>
+            </p>
+            <p class="total">
+                <strong>Total:</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</span>
+            </p>
+        </div>
+        
+        <div class="factura-footer" th:if="${compra.observaciones != null && !compra.observaciones.isEmpty()}">
+            <p><strong>Observaciones:</strong></p>
+            <p th:text="${compra.observaciones}">Observaciones</p>
+        </div>
+        
+        <div class="factura-footer">
+            <p>Gracias por su servicio</p>
+            <p>Este documento es una constancia de la compra realizada</p>
+        </div>
+        
+        <div class="acciones-factura">
+            <button onclick="imprimirFactura()" class="btn btn-imprimir">🖨️ Imprimir</button>
+            <a th:href="@{/admin/compras}" class="btn btn-secondary">← Volver a Compras</a>
+        </div>
+    </div>
+</body>
+</html>

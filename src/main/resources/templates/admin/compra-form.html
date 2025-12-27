@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Compra - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <style>
+        .detalle-item {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .detalle-container {
+            margin: 20px 0;
+        }
+        
+        .totales {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .totales p {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .totales p.total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            border-top: 2px solid #3498db;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>📚 Admin Panel</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/admin}" class="menu-item">
+                    <span>📊</span> Dashboard
+                </a>
+                <a th:href="@{/admin/libros}" class="menu-item">
+                    <span>📖</span> Libros
+                </a>
+                <a th:href="@{/admin/clientes}" class="menu-item">
+                    <span>👥</span> Clientes
+                </a>
+                <a th:href="@{/admin/usuarios}" class="menu-item">
+                    <span>👤</span> Usuarios
+                </a>
+                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
+                    <span>⏳</span> Pedidos Pendientes
+                </a>
+                <a th:href="@{/admin/prestamos}" class="menu-item">
+                    <span>📚</span> Préstamos
+                </a>
+                <a th:href="@{/admin/ingresos}" class="menu-item">
+                    <span>💰</span> Ingresos
+                </a>
+                <a th:href="@{/admin/proveedores}" class="menu-item">
+                    <span>🏢</span> Proveedores
+                </a>
+                <a th:href="@{/admin/compras}" class="menu-item active">
+                    <span>🛒</span> Compras
+                </a>
+                <a th:href="@{/admin/logout}" class="menu-item logout">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Nueva Compra</h1>
+                <a th:href="@{/admin/compras}" class="btn btn-secondary">← Volver</a>
+            </header>
+
+            <div class="content-body">
+                <form id="formCompra" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proveedor">Proveedor *</label>
+                            <select id="proveedor" required>
+                                <option value="">Seleccione un proveedor</option>
+                                <option th:each="prov : ${proveedores}" 
+                                        th:value="${prov.id}" 
+                                        th:text="${prov.nombre} + ' - RUC: ' + ${prov.ruc}">
+                                    Proveedor
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones</label>
+                            <input type="text" id="observaciones" placeholder="Notas adicionales">
+                        </div>
+                    </div>
+
+                    <h3>Detalle de Compra</h3>
+                    <div class="detalle-container" id="detalleContainer">
+                        <div class="detalle-item">
+                            <div class="form-group">
+                                <label>Libro *</label>
+                                <select class="libro-select" required>
+                                    <option value="">Seleccione un libro</option>
+                                    <option th:each="libro : ${libros}" 
+                                            th:value="${libro.id}" 
+                                            th:text="${libro.titulo} + ' - ' + ${libro.autor}"
+                                            th:attr="data-precio=${libro.precio}">
+                                        Libro
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad *</label>
+                                <input type="number" class="cantidad-input" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Precio Unitario *</label>
+                                <input type="number" class="precio-input" step="0.01" min="0" value="0" required>
+                            </div>
+                            <button type="button" class="btn btn-delete" onclick="eliminarDetalle(this)" style="display:none;">❌</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" onclick="agregarDetalle()">+ Agregar Libro</button>
+
+                    <div class="totales">
+                        <p>
+                            <span>Subtotal:</span>
+                            <span id="subtotalTexto">$0.00</span>
+                        </p>
+                        <p>
+                            <span>IVA (19%):</span>
+                            <span id="impuestoTexto">$0.00</span>
+                        </p>
+                        <p class="total">
+                            <span>Total:</span>
+                            <span id="totalTexto">$0.00</span>
+                        </p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Registrar Compra</button>
+                        <a th:href="@{/admin/compras}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let detalleCount = 1;
+
+        function agregarDetalle() {
+            detalleCount++;
+            const container = document.getElementById('detalleContainer');
+            const newDetalle = document.querySelector('.detalle-item').cloneNode(true);
+            
+            // Limpiar valores
+            newDetalle.querySelector('.libro-select').value = '';
+            newDetalle.querySelector('.cantidad-input').value = 1;
+            newDetalle.querySelector('.precio-input').value = 0;
+            newDetalle.querySelector('.btn-delete').style.display = 'inline-block';
+            
+            container.appendChild(newDetalle);
+            actualizarEventos();
+        }
+
+        function eliminarDetalle(btn) {
+            btn.closest('.detalle-item').remove();
+            calcularTotales();
+        }
+
+        function actualizarEventos() {
+            document.querySelectorAll('.libro-select').forEach(select => {
+                select.onchange = function() {
+                    const option = this.options[this.selectedIndex];
+                    const precio = option.getAttribute('data-precio') || 0;
+                    const precioInput = this.closest('.detalle-item').querySelector('.precio-input');
+                    precioInput.value = precio;
+                    calcularTotales();
+                };
+            });
+
+            document.querySelectorAll('.cantidad-input, .precio-input').forEach(input => {
+                input.oninput = calcularTotales;
+            });
+        }
+
+        function calcularTotales() {
+            let subtotal = 0;
+            
+            document.querySelectorAll('.detalle-item').forEach(item => {
+                const cantidad = parseFloat(item.querySelector('.cantidad-input').value) || 0;
+                const precio = parseFloat(item.querySelector('.precio-input').value) || 0;
+                subtotal += cantidad * precio;
+            });
+
+            const impuesto = subtotal * 0.19;
+            const total = subtotal + impuesto;
+
+            document.getElementById('subtotalTexto').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('impuestoTexto').textContent = '$' + impuesto.toFixed(2);
+            document.getElementById('totalTexto').textContent = '$' + total.toFixed(2);
+        }
+
+        document.getElementById('formCompra').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const proveedorId = document.getElementById('proveedor').value;
+            const observaciones = document.getElementById('observaciones').value;
+            
+            if (!proveedorId) {
+                alert('Debe seleccionar un proveedor');
+                return;
+            }
+
+            const detalles = [];
+            let valido = true;
+
+            document.querySelectorAll('.detalle-item').forEach(item => {
+                const libroId = item.querySelector('.libro-select').value;
+                const cantidad = item.querySelector('.cantidad-input').value;
+                const precio = item.querySelector('.precio-input').value;
+
+                if (!libroId || !cantidad || !precio) {
+                    valido = false;
+                    return;
+                }
+
+                detalles.push({
+                    libroId: libroId,
+                    cantidad: cantidad,
+                    precioUnitario: precio
+                });
+            });
+
+            if (!valido || detalles.length === 0) {
+                alert('Complete todos los campos del detalle de compra');
+                return;
+            }
+
+            // Calcular totales
+            const subtotal = parseFloat(document.getElementById('subtotalTexto').textContent.replace('$', ''));
+            const impuesto = parseFloat(document.getElementById('impuestoTexto').textContent.replace('$', ''));
+            const total = parseFloat(document.getElementById('totalTexto').textContent.replace('$', ''));
+
+            // Enviar datos al servidor
+            const data = {
+                proveedorId: proveedorId,
+                observaciones: observaciones,
+                subtotal: subtotal,
+                impuesto: impuesto,
+                total: total,
+                detalles: detalles
+            };
+
+            fetch('/admin/compras/guardar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/admin/compras';
+                } else {
+                    alert('Error al registrar la compra');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al registrar la compra');
+            });
+        };
+
+        // Inicializar eventos
+        actualizarEventos();
+    </script>
+</body>
+</html>
