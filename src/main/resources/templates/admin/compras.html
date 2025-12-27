@@ -5,84 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compras - Admin</title>
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/compras.css}">
 </head>
 <body>
-    <div class="admin-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>Admin Panel</h2>
-            </div>
-            <nav class="menu">
-                <a th:href="@{/admin}" class="menu-item">
-                    <span></span> Dashboard
-                </a>
-                <a th:href="@{/admin/libros}" class="menu-item">
-                    <span></span> Libros
-                </a>
-                <a th:href="@{/admin/clientes}" class="menu-item">
-                    <span></span> Clientes
-                </a>
-                <a th:href="@{/admin/usuarios}" class="menu-item">
-                    <span></span> Usuarios
-                </a>
-                <a th:href="@{/admin/pedidos-pendientes}" class="menu-item">
-                    <span></span> Pedidos Pendientes
-                </a>
-                <a th:href="@{/admin/prestamos}" class="menu-item">
-                    <span></span> Préstamos
-                </a>
-                <a th:href="@{/admin/ingresos}" class="menu-item">
-                    <span></span> Ingresos
-                </a>
-                <a th:href="@{/admin/proveedores}" class="menu-item">
-                    <span></span> Proveedores
-                </a>
-                <a th:href="@{/admin/compras}" class="menu-item active">
-                    <span></span> Compras
-                </a>
-                <a th:href="@{/admin/logout}" class="menu-item logout">
-                    <span></span> Cerrar Sesión
-                </a>
-            </nav>
-        </aside>
+    <header class="header">
+        <nav class="nav">
+            <h1>Panel de Administración</h1>
+            <ul class="nav-links">
+                <li><a th:href="@{/tienda}" class="nav-link">Ver Tienda</a></li>
+                <li><a th:href="@{/admin}" class="nav-link">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <main class="main-content">
-            <header class="content-header">
-                <h1>Registro de Compras</h1>
-                <a th:href="@{/admin/compras/nueva}" class="btn btn-primary">+ Nueva Compra</a>
-            </header>
+    <main class="admin-container">
+        <div class="page-header">
+            <h1>🧾 Registro de Compras</h1>
+            <a th:href="@{/admin/compras/nueva}" class="btn-nueva">➕ Nueva Compra</a>
+        </div>
 
-            <div class="content-body">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>N° Factura</th>
-                            <th>Fecha</th>
-                            <th>Proveedor</th>
-                            <th>Subtotal</th>
-                            <th>IVA</th>
-                            <th>Total</th>
-                            <th>Usuario</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="compra : ${compras}">
-                            <td th:text="${compra.numeroFactura}">COMP-001</td>
-                            <td th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
-                            <td th:text="${compra.proveedor.nombre}">Proveedor</td>
-                            <td th:text="'$' + ${#numbers.formatDecimal(compra.subtotal, 1, 2)}">$0.00</td>
-                            <td th:text="'$' + ${#numbers.formatDecimal(compra.impuesto, 1, 2)}">$0.00</td>
-                            <td th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</td>
-                            <td th:text="${compra.usuario != null ? compra.usuario.username : 'N/A'}">Usuario</td>
-                            <td>
-                                <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn btn-info">Ver</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
+        <div class="table-container">
+            <table class="compras-table">
+                <thead>
+                    <tr>
+                        <th>N° Factura</th>
+                        <th>Fecha</th>
+                        <th>Proveedor</th>
+                        <th>Subtotal</th>
+                        <th>IVA</th>
+                        <th>Total</th>
+                        <th>Usuario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="compra : ${compras}">
+                        <td data-label="N° Factura">
+                            <span class="factura-numero" th:text="${compra.numeroFactura}">COMP-001</span>
+                        </td>
+                        <td data-label="Fecha">
+                            <span class="fecha-display" th:text="${#temporals.format(compra.fechaCompra, 'dd/MM/yyyy HH:mm')}">01/01/2024</span>
+                        </td>
+                        <td data-label="Proveedor">
+                            <span class="proveedor-display" th:text="${compra.proveedor.nombre}">Proveedor S.A.</span>
+                        </td>
+                        <td data-label="Subtotal">
+                            <span class="monto-display monto-subtotal" th:text="'$' + ${#numbers.formatDecimal(compra.subtotal, 1, 2)}">$0.00</span>
+                        </td>
+                        <td data-label="IVA">
+                            <span class="monto-display monto-iva" th:text="'$' + ${#numbers.formatDecimal(compra.impuesto, 1, 2)}">$0.00</span>
+                        </td>
+                        <td data-label="Total">
+                            <span class="monto-display monto-total" th:text="'$' + ${#numbers.formatDecimal(compra.total, 1, 2)}">$0.00</span>
+                        </td>
+                        <td data-label="Usuario">
+                            <span class="usuario-display" th:text="${compra.usuario != null ? compra.usuario.username : 'N/A'}">admin</span>
+                        </td>
+                        <td data-label="Acciones">
+                            <a th:href="@{/admin/compras/ver/{id}(id=${compra.id})}" class="btn-ver">👁️ Ver</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Panel de Administración - Todos los derechos reservados</p>
+    </footer>
 </body>
 </html>

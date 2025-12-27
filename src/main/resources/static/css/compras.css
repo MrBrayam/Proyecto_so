@@ -1,0 +1,296 @@
+/* Compras CSS - Registro de compras */
+
+/* Variables específicas */
+:root {
+    --compra-primary: #e67e22;
+    --compra-primary-dark: #d35400;
+    --compra-success: #27ae60;
+}
+
+/* Header de la página */
+.page-header {
+    background: linear-gradient(135deg, var(--admin-white) 0%, #f8f9fa 100%);
+    padding: 30px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-header h1 {
+    color: var(--admin-dark);
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Botón nueva compra */
+.btn-nueva {
+    background: linear-gradient(135deg, var(--compra-primary) 0%, var(--compra-primary-dark) 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--admin-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(230, 126, 34, 0.2);
+}
+
+.btn-nueva:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(230, 126, 34, 0.3);
+    color: white;
+}
+
+/* Contenedor de tabla */
+.table-container {
+    background: var(--admin-white);
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    overflow: hidden;
+}
+
+/* Tabla de compras */
+.compras-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compras-table thead {
+    background: linear-gradient(135deg, var(--admin-dark) 0%, var(--admin-dark-light) 100%);
+    color: white;
+}
+
+.compras-table th {
+    padding: 18px 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.compras-table tbody tr {
+    border-bottom: 1px solid var(--admin-gray-lighter);
+    transition: var(--admin-transition);
+}
+
+.compras-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.compras-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.compras-table td {
+    padding: 18px 15px;
+    vertical-align: middle;
+}
+
+/* Número de factura */
+.factura-numero {
+    font-weight: 600;
+    color: var(--admin-dark);
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* Fecha display */
+.fecha-display {
+    color: var(--admin-gray);
+    font-size: 0.9rem;
+}
+
+/* Proveedor display */
+.proveedor-display {
+    font-weight: 500;
+    color: var(--admin-dark);
+}
+
+/* Montos */
+.monto-display {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.monto-subtotal {
+    color: var(--admin-gray);
+}
+
+.monto-iva {
+    color: var(--admin-warning);
+}
+
+.monto-total {
+    color: var(--compra-success);
+    font-size: 1.05rem;
+}
+
+/* Usuario display */
+.usuario-display {
+    color: var(--admin-gray);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.usuario-display::before {
+    content: '👤';
+}
+
+/* Botón ver */
+.btn-ver {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--admin-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-ver:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    color: white;
+}
+
+/* Resumen de totales */
+.totales-resumen {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: var(--admin-radius);
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+}
+
+.total-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.total-label {
+    font-size: 0.85rem;
+    color: var(--admin-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.total-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.total-value.subtotal {
+    color: var(--admin-gray);
+}
+
+.total-value.iva {
+    color: var(--admin-warning);
+}
+
+.total-value.total {
+    color: var(--compra-success);
+    font-size: 1.5rem;
+}
+
+/* Mensaje sin datos */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--admin-gray);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .page-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .btn-nueva {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .totales-resumen {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .compras-table thead {
+        display: none;
+    }
+    
+    .compras-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid var(--admin-gray-lighter);
+        border-radius: var(--admin-radius);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .compras-table tbody td {
+        display: block;
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+    }
+    
+    .compras-table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 15px;
+    }
+    
+    .compras-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .btn-ver {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .factura-numero {
+        display: block;
+        text-align: center;
+    }
+}

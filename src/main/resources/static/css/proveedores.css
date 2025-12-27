@@ -1,0 +1,263 @@
+/* Proveedores CSS - Gestión de proveedores */
+
+/* Variables heredadas de admin.css */
+:root {
+    --proveedor-primary: #9b59b6;
+    --proveedor-primary-dark: #8e44ad;
+    --proveedor-secondary: #3498db;
+}
+
+/* Header de la página */
+.page-header {
+    background: linear-gradient(135deg, var(--admin-white) 0%, #f8f9fa 100%);
+    padding: 30px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-header h1 {
+    color: var(--admin-dark);
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Botón nuevo proveedor */
+.btn-nuevo {
+    background: linear-gradient(135deg, var(--proveedor-primary) 0%, var(--proveedor-primary-dark) 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--admin-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(155, 89, 182, 0.2);
+}
+
+.btn-nuevo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(155, 89, 182, 0.3);
+    color: white;
+}
+
+/* Contenedor de tabla */
+.table-container {
+    background: var(--admin-white);
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    overflow: hidden;
+}
+
+/* Tabla de proveedores */
+.proveedores-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.proveedores-table thead {
+    background: linear-gradient(135deg, var(--admin-dark) 0%, var(--admin-dark-light) 100%);
+    color: white;
+}
+
+.proveedores-table th {
+    padding: 18px 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.proveedores-table tbody tr {
+    border-bottom: 1px solid var(--admin-gray-lighter);
+    transition: var(--admin-transition);
+}
+
+.proveedores-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.proveedores-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.proveedores-table td {
+    padding: 18px 15px;
+    vertical-align: middle;
+}
+
+/* Información del proveedor */
+.proveedor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.proveedor-nombre {
+    font-weight: 600;
+    color: var(--admin-dark);
+    font-size: 1rem;
+}
+
+.proveedor-ruc {
+    color: var(--admin-gray);
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* Email display */
+.email-display {
+    color: var(--proveedor-secondary);
+    text-decoration: none;
+    transition: var(--admin-transition);
+}
+
+.email-display:hover {
+    color: var(--proveedor-primary);
+    text-decoration: underline;
+}
+
+/* Teléfono display */
+.telefono-display {
+    color: var(--admin-dark);
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+/* Contacto display */
+.contacto-display {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--admin-gray);
+    font-size: 0.9rem;
+}
+
+.contacto-display::before {
+    content: '👤';
+}
+
+/* Grupo de botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-primary-dark) 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--admin-transition);
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    color: white;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, var(--admin-danger) 0%, var(--admin-danger-dark) 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--admin-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--admin-transition);
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    color: white;
+}
+
+/* Mensaje sin datos */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--admin-gray);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .page-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .btn-nuevo {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .proveedores-table thead {
+        display: none;
+    }
+    
+    .proveedores-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid var(--admin-gray-lighter);
+        border-radius: var(--admin-radius);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .proveedores-table tbody td {
+        display: block;
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--admin-gray-lighter);
+    }
+    
+    .proveedores-table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 15px;
+    }
+    
+    .proveedores-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--admin-dark);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        width: 100%;
+        text-align: center;
+    }
+}
