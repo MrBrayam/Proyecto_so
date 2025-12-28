@@ -44,9 +44,6 @@ application-*.yml
 *.sql
 !schema.sql
 
-### Uploads ###
-src/main/resources/static/uploads/
-uploads/
 
 ### Logs ###
 *.log
