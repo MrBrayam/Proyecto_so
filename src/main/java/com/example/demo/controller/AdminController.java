@@ -66,6 +66,9 @@ public class AdminController {
     @Autowired
     private DetalleCompraRepository detalleCompraRepository;
 
+    @Autowired
+    private com.example.demo.service.PdfService pdfService;
+
     // Método auxiliar para verificar si el usuario es ADMIN
     private boolean esAdmin(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
@@ -428,6 +431,91 @@ public class AdminController {
         model.addAttribute("fechaFin", fechaFin);
         
         return "admin/finanzas";
+    }
+    
+    @GetMapping("/finanzas/exportar-pdf")
+    public org.springframework.http.ResponseEntity<byte[]> exportarFinanzasPDF(
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            HttpSession session) {
+        
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null || !esAdmin(session)) {
+            return org.springframework.http.ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).build();
+        }
+        
+        LocalDateTime inicio = null;
+        LocalDateTime fin = LocalDateTime.now();
+        String periodo = "Todos los registros";
+        
+        // Determinar el rango de fechas según el filtro
+        if (filtro != null) {
+            switch (filtro) {
+                case "hoy":
+                    inicio = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+                    periodo = "Hoy";
+                    break;
+                case "semana":
+                    inicio = LocalDateTime.now().minusDays(7);
+                    periodo = "Última semana";
+                    break;
+                case "mes":
+                    inicio = LocalDateTime.now().minusMonths(1);
+                    periodo = "Último mes";
+                    break;
+                case "personalizado":
+                    if (fechaInicio != null && !fechaInicio.isEmpty()) {
+                        inicio = LocalDateTime.parse(fechaInicio + "T00:00:00");
+                    }
+                    if (fechaFin != null && !fechaFin.isEmpty()) {
+                        fin = LocalDateTime.parse(fechaFin + "T23:59:59");
+                    }
+                    periodo = "Del " + fechaInicio + " al " + fechaFin;
+                    break;
+            }
+        }
+        
+        // Obtener datos
+        Double totalIngresos;
+        List<Ingreso> ingresos;
+        
+        if (inicio != null) {
+            totalIngresos = ingresoRepository.calcularIngresoTotalPorFecha(inicio, fin);
+            ingresos = ingresoRepository.findByFechaBetween(inicio, fin);
+        } else {
+            totalIngresos = ingresoRepository.calcularIngresoTotal();
+            ingresos = ingresoRepository.findAll();
+        }
+        
+        Double totalGastos;
+        List<Compra> compras;
+        
+        if (inicio != null) {
+            totalGastos = compraRepository.calcularGastoTotalPorFecha(inicio, fin);
+            compras = compraRepository.findByFechaCompraBetween(inicio, fin);
+        } else {
+            totalGastos = compraRepository.calcularGastoTotal();
+            compras = compraRepository.findAll();
+        }
+        
+        Double balance = (totalIngresos != null ? totalIngresos : 0.0) - (totalGastos != null ? totalGastos : 0.0);
+        
+        // Generar PDF
+        byte[] pdfBytes = pdfService.generarReporteFinanzas(
+                ingresos,
+                compras,
+                totalIngresos != null ? totalIngresos : 0.0,
+                totalGastos != null ? totalGastos : 0.0,
+                balance,
+                periodo
+        );
+        
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("filename", "finanzas_" + System.currentTimeMillis() + ".pdf");
+        
+        return new org.springframework.http.ResponseEntity<>(pdfBytes, headers, org.springframework.http.HttpStatus.OK);
     }
     
     // Mantener compatibilidad con la ruta anterior

@@ -152,6 +152,26 @@
     color: var(--admin-dark);
 }
 
+/* Gráfico Container */
+.grafico-container {
+    background: var(--admin-white);
+    padding: 30px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 30px;
+}
+
+.grafico-container h3 {
+    color: var(--admin-dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.grafico-container canvas {
+    max-height: 300px;
+}
+
 /* Tabs */
 .tabs-container {
     background: var(--admin-white);
